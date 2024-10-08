@@ -1,0 +1,6 @@
+﻿  CppTask11.cpp
+C:\Users\TUNAY\source\repos\CppTasks\CppTask11\CppTask11\CppTask11.cpp(249,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
+C:\Users\TUNAY\source\repos\CppTasks\CppTask11\CppTask11\CppTask11.cpp(68,1): warning C4172: returning address of local variable or temporary : ptr
+C:\Users\TUNAY\source\repos\CppTasks\CppTask11\CppTask11\CppTask11.cpp(100,1): warning C4172: returning address of local variable or temporary : ptr
+C:\Users\TUNAY\source\repos\CppTasks\CppTask11\CppTask11\CppTask11.cpp(20,1): warning C4172: returning address of local variable or temporary : count
+  CppTask11.vcxproj -> C:\Users\TUNAY\source\repos\CppTasks\CppTask11\x64\Debug\CppTask11.exe

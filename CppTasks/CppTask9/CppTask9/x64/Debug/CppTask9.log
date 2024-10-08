@@ -1,0 +1,4 @@
+﻿  CppTask9.cpp
+C:\Users\TUNAY\source\repos\CppTasks\CppTask9\CppTask9\CppTask9.cpp(254,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
+C:\Users\TUNAY\source\repos\CppTasks\CppTask9\CppTask9\CppTask9.cpp(257,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  CppTask9.vcxproj -> C:\Users\TUNAY\source\repos\CppTasks\CppTask9\x64\Debug\CppTask9.exe

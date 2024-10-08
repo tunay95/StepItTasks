@@ -1,0 +1,9 @@
+﻿  CppTask10.cpp
+C:\Users\TUNAY\source\repos\CppTasks\CppTask10\CppTask10\CppTask10.cpp(103,10): warning C4244: '*=': conversion from 'double' to 'int', possible loss of data
+C:\Users\TUNAY\source\repos\CppTasks\CppTask10\CppTask10\CppTask10.cpp(143,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
+C:\Users\TUNAY\source\repos\CppTasks\CppTask10\CppTask10\CppTask10.cpp(146,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\TUNAY\source\repos\CppTasks\CppTask10\CppTask10\CppTask10.cpp(53,1): warning C4172: returning address of local variable or temporary : countEven
+C:\Users\TUNAY\source\repos\CppTasks\CppTask10\CppTask10\CppTask10.cpp(107,1): warning C4172: returning address of local variable or temporary : numbers2
+C:\Users\TUNAY\source\repos\CppTasks\CppTask10\CppTask10\CppTask10.cpp(80,1): warning C4172: returning address of local variable or temporary : numbers2
+C:\Users\TUNAY\source\repos\CppTasks\CppTask10\CppTask10\CppTask10.cpp(137,1): warning C4172: returning address of local variable or temporary : numbers2
+  CppTask10.vcxproj -> C:\Users\TUNAY\source\repos\CppTasks\CppTask10\x64\Debug\CppTask10.exe

@@ -1,0 +1,3 @@
+﻿  CppTask4.cpp
+C:\Users\TUNAY\source\repos\CppTask4\CppTask4\CppTask4.cpp(4,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
+  CppTask4.vcxproj -> C:\Users\TUNAY\source\repos\CppTask4\x64\Debug\CppTask4.exe

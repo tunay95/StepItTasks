@@ -1,0 +1,4 @@
+﻿  CppTask5.cpp
+C:\Users\TUNAY\source\repos\CppTasks\CppTask5\CppTask5\CppTask5.cpp(5,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
+C:\Users\TUNAY\source\repos\CppTasks\CppTask5\CppTask5\CppTask5.cpp(213,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  CppTask5.vcxproj -> C:\Users\TUNAY\source\repos\CppTasks\CppTask5\x64\Debug\CppTask5.exe

@@ -1,0 +1,3 @@
+﻿  CppTask12.cpp
+C:\Users\TUNAY\source\repos\CppTasks\CppTask12\CppTask12\CppTask12.cpp(114,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
+  CppTask12.vcxproj -> C:\Users\TUNAY\source\repos\CppTasks\CppTask12\x64\Debug\CppTask12.exe

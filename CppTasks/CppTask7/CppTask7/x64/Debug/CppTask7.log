@@ -1,0 +1,7 @@
+﻿  CppTask7.cpp
+C:\Users\TUNAY\source\repos\CppTasks\CppTask7\CppTask7\CppTask7.cpp(290,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
+C:\Users\TUNAY\source\repos\CppTasks\CppTask7\CppTask7\CppTask7.cpp(557,8): warning C4101: 'searchedNum2': unreferenced local variable
+C:\Users\TUNAY\source\repos\CppTasks\CppTask7\CppTask7\CppTask7.cpp(560,7): warning C4101: 'searchedNum3': unreferenced local variable
+C:\Users\TUNAY\source\repos\CppTasks\CppTask7\CppTask7\CppTask7.cpp(563,9): warning C4101: 'searchedNum4': unreferenced local variable
+C:\Users\TUNAY\source\repos\CppTasks\CppTask7\CppTask7\CppTask7.cpp(554,6): warning C4101: 'searchedNum': unreferenced local variable
+  CppTask7.vcxproj -> C:\Users\TUNAY\source\repos\CppTasks\CppTask7\x64\Debug\CppTask7.exe

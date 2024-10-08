@@ -1,0 +1,4 @@
+﻿  CppTask14.cpp
+C:\Users\TUNAY\source\repos\CppTasks\CppTask14\CppTask14\CppTask14.cpp(196,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
+C:\Users\TUNAY\source\repos\CppTasks\CppTask14\CppTask14\CppTask14.cpp(160,1): warning C4715: 'SearchBook': not all control paths return a value
+  CppTask14.vcxproj -> C:\Users\TUNAY\source\repos\CppTasks\CppTask14\x64\Debug\CppTask14.exe

@@ -1,0 +1,3 @@
+﻿  CppTask16.cpp
+C:\Users\TUNAY\source\repos\StepItTasks\CppTasks\CppTask16\CppTask16\CppTask16.cpp(183,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
+  CppTask16.vcxproj -> C:\Users\TUNAY\source\repos\StepItTasks\CppTasks\CppTask16\x64\Debug\CppTask16.exe

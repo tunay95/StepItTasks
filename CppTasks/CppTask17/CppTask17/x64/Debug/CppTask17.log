@@ -1,0 +1,4 @@
+﻿  CppTask17.cpp
+C:\Users\TUNAY\source\repos\StepItTasks\CppTasks\CppTask17\CppTask17\CppTask17.cpp(266,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
+C:\Users\TUNAY\source\repos\StepItTasks\CppTasks\CppTask17\CppTask17\CppTask17.cpp(270,26): warning C4101: 'discount2': unreferenced local variable
+  CppTask17.vcxproj -> C:\Users\TUNAY\source\repos\StepItTasks\CppTasks\CppTask17\x64\Debug\CppTask17.exe

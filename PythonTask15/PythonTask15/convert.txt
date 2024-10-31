@@ -1,1 +1,0 @@
-{"666FLK8": {"model": "Cadillac", "year": 1998, "count": 0, "price": 12000}, "65HD7GD3": {"model": "Hyndai", "year": 2023, "count": 2, "price": 1700}, "65HD7883": {"model": "BMW", "year": 2023, "count": 4, "price": 2100}}

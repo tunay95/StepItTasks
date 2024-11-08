@@ -1,0 +1,6 @@
+﻿  CppTask20.cpp
+C:\Users\TUNAY\source\repos\StepItTasks\CppTasks\CppTask20\CppTask20\CppTask20.cpp(100,4): warning C4150: deletion of pointer to incomplete type 'Worker'; no destructor called
+      C:\Users\TUNAY\source\repos\StepItTasks\CppTasks\CppTask20\CppTask20\CppTask20.cpp(8,7):
+      see declaration of 'Worker'
+  
+  CppTask20.vcxproj -> C:\Users\TUNAY\source\repos\StepItTasks\CppTasks\CppTask20\x64\Debug\CppTask20.exe

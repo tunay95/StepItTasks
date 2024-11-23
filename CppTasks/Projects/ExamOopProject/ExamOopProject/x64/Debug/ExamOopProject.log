@@ -1,0 +1,4 @@
+﻿  ExamOopProject.cpp
+C:\Users\TUNAY\source\repos\StepItTasks\CppTasks\Projects\ExamOopProject\ExamOopProject\ExamOopProject.cpp(230,35): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\TUNAY\source\repos\StepItTasks\CppTasks\Projects\ExamOopProject\ExamOopProject\ExamOopProject.cpp(437,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  ExamOopProject.vcxproj -> C:\Users\TUNAY\source\repos\StepItTasks\CppTasks\Projects\ExamOopProject\x64\Debug\ExamOopProject.exe

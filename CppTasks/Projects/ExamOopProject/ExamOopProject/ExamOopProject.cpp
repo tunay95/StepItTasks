@@ -31,6 +31,7 @@ protected:
 	string answer;
 
 public:
+
 	Question(const string& statement, string answer) :statement(statement), answer(answer)
 	{ }
 
@@ -38,6 +39,7 @@ public:
 
 	virtual bool CheckAnswer(string userAnswer) = 0;
 
+	virtual vector<string>& GetQuestionOptions() {};
 
 	string GetStatement() const
 	{
@@ -101,6 +103,24 @@ public:
 	OpenEndedQuestion(const string& statement, string answer)
 		: Question(statement, answer) {}
 
+
+	string& GetUserAnswer()
+	{
+		return userAnswer;
+	}
+
+	void SetUserAnswer(string userAnswer)
+	{
+		while (userAnswer.length() > 20)
+		{
+			cout << "\nYour Answer's too long.\n";
+			cin >> userAnswer;
+		}
+
+		this->userAnswer = userAnswer;
+	}
+
+
 	void ShowQuestion() override
 	{
 		cout << "Question: " << statement << endl << endl;
@@ -120,11 +140,17 @@ class FourOptionQuestion :public Question
 
 	map<char, string> questionOptions2;
 
-
 public:
 
-	FourOptionQuestion(vector<string> questionOptions, const string& statement, string answer)
-		: Question(statement, answer), questionOptions(questionOptions) {}
+	FourOptionQuestion(const string& statement, const string& answer)
+		: Question(statement, answer)
+	{ }
+
+
+	vector<string>& GetQuestionOptions() override
+	{
+		return questionOptions;
+	}
 
 
 	void ShowQuestion() override
@@ -573,46 +599,89 @@ public:
 	}
 
 
-	void AddCategory()
+	void AddCategory(string categoryName)
 	{
-		string categoryName;
-
-		cout << "Enter Category Name: ";
-		cin >> categoryName;
-
 		shared_ptr<Category> category = make_shared<Category>(categoryName);
 
 		db.GetCategories().push_back(category);
 	}
 
 
-	void AddTest()
+	void AddTest(string testName, int categoryInput)
 	{
-		string testName;
-		int categoryInput;
-
-		for (size_t i = 0; i < db.GetCategories().size();i++)
-		{
-			cout << i + 1 << "." << db.GetCategories()[i] << endl;
-		}
-
-		cout << "\nYour Choice: ";
-		cin >> categoryInput;
-
-		cout << "Enter Test Name: ";
-		cin >> testName;
-
 		shared_ptr<Test> test = make_shared<Test>(testName);
 
 		db.GetCategories()[categoryInput - 1]->GetTests().push_back(test);
 	}
 
 
-	void addQuestion()
+	void AddQuestion(int categoryInput, int testInput, int questionTypeInput)
 	{
+		string statement, correctAnswer, optionInput;
+		shared_ptr<Question> question;
+
+		cout << "Enter Question Statement: ";
+		cin >> statement;
+
+		cout << "Enter Correct Answer: ";
+		cin >> correctAnswer;
+
+		switch (questionTypeInput)
+		{
+
+		case 1:
+
+			question = make_shared<TrueFalseQuestion>(statement, correctAnswer);
+			break;
+
+		case 2:
+
+			question = make_shared<OpenEndedQuestion>(statement, correctAnswer);
+			break;
+
+		case 3:
+
+			question = make_shared<FourOptionQuestion>(statement, correctAnswer);
+
+			for (size_t i = 0; i < 3; i++)
+			{
+				cout << "Enter False Answer No" << i + 1 << ": ";
+				cin >> optionInput;
+
+				question->GetQuestionOptions().push_back(optionInput);
+			}
+
+			break;
+
+		default:
+
+			cout << "\nChoose Correct Option.\n";
+
+			break;
+		}
 
 	}
 
+
+	shared_ptr<User>& CreateUser(string name, string surname, string username, string password, string paternalName, string address, string phoneNumber)
+	{
+
+
+	}
+
+
+	shared_ptr<User>& FindUserByUsername(string username)
+	{
+		for (auto& user : db.GetUsers())
+		{
+			if (user->GetUsername() == username)
+			{
+				return user;
+			}
+		}
+
+		throw runtime_error("\nUser Not Found.\n");
+	}
 };
 
 
@@ -644,8 +713,6 @@ public:
 		user->SetPhoneNumber(phoneNumber);
 
 		db.GetUsers().push_back(user);
-
-		cout << "Register is Successful";
 	}
 
 
@@ -701,7 +768,6 @@ public:
 
 		admin->SetAdminUsername(username);
 		admin->SetAdminPassword(password);
-
 	}
 
 
@@ -757,9 +823,9 @@ int main()
 
 	Database database;
 	UserManager usermanager(database);
+	shared_ptr<Admin> admin;
 
-	int userChoice, userChoice2, userChoice3, userChoice4,
-		adminChoice, adminChoice2, adminChoice3, adminChoice4, adminChoice5, adminChoice6;
+	int userChoice, userChoice2, userChoice3, userChoice4, adminChoice, adminChoice2, adminChoice3, adminChoice4, adminChoice5, adminChoice6;
 
 	while (true)
 	{
@@ -796,6 +862,7 @@ int main()
 						cin >> passwordUserInput;
 
 						shared_ptr<User> currentlyUser = usermanager.UserLogin(usernameUserInput, passwordUserInput);
+
 						if (currentlyUser)
 						{
 							system("cls");
@@ -805,11 +872,11 @@ int main()
 							switch (userChoice3)
 							{
 
-							case 1:  // Previous Results
+							case 1:   // Previous Results
 
 								currentlyUser->ShowPreviousTestResults();
 
-							case 2:  // New Test
+							case 2:   // New Test
 
 								for (size_t i = 0; i < database.GetCategories().size();i++)
 								{
@@ -842,12 +909,13 @@ int main()
 
 						break;
 					}
-				}
+				}   // Login
 
 				case 2:	  // Register
 				{
 					string nameUserInput, surnameUserInput, usernameUserInput, passwordUserInput, paternalUserInput, addressUserInput, phoneNumberUserInput;
 					system("cls");
+
 					cout << "\nEnter Name: ";
 					cin >> nameUserInput;
 
@@ -870,40 +938,158 @@ int main()
 					cin >> phoneNumberUserInput;
 
 					usermanager.UserRegister(nameUserInput, surnameUserInput, usernameUserInput, passwordUserInput, paternalUserInput, addressUserInput, phoneNumberUserInput);
-					system("cls");
+					cout << "Register is Successful";
 
 					break;
 				}
 
-				case 3:	   // Back
+				case 3:	  // Back
 				{
 					break;
 				}
 
 				default:
+
 					cout << "\nChoice Correct Choice.\n";
+
 					break;
 				}
 
 			case 2:    // Admin
 
-				cout << "";
+				cout << "1.Login\n2.Register\n3.Back\n\nYour Choice: ";
+				cin >> adminChoice;
+				system("cls");
 
 				switch (adminChoice)
 				{
 
 				case 1:	   // User Management
 
+					cout << "1. Create User\n2. Update User\n3. Delete User\n\nYour Choice: ";
+					cin >> adminChoice2;
+
 					switch (adminChoice2)
 					{
 
 					case 1:	   // Create User	 
+					{
+						string nameUserInput, surnameUserInput, usernameUserInput, passwordUserInput, paternalUserInput, addressUserInput, phoneNumberUserInput;
+						system("cls");
 
+						cout << "\nEnter Name: ";
+						cin >> nameUserInput;
 
+						cout << "\nEnter Surname: ";
+						cin >> surnameUserInput;
+
+						cout << "\nEnter Username: ";
+						cin >> usernameUserInput;
+
+						cout << "\nEnter Password: ";
+						cin >> passwordUserInput;
+
+						cout << "\nEnter Paternal Name: ";
+						cin >> paternalUserInput;
+
+						cout << "\nEnter Address: ";
+						cin >> addressUserInput;
+
+						cout << "\nEnter Phone Number: ";
+						cin >> phoneNumberUserInput;
+
+						usermanager.UserRegister(nameUserInput, surnameUserInput, usernameUserInput, passwordUserInput, paternalUserInput, addressUserInput, phoneNumberUserInput);
+					}
 
 					case 2:	   // Update User
+					{
+						string usernameInput2;
+						int updateOption;
 
+						cout << "Which User's Data you want to update ?\n\nUsername: ";
+						cin >> usernameInput2;
 
+						shared_ptr<User>& tempUser = admin->FindUserByUsername(usernameInput2);
+
+						cout << "What specifically would you like to update?\n\n1.Name\n2.Surname\n\n3.Username\n4.Password\n5.\Paternal Name\n6.Address\n7.Phone Number\n\nYour Choice: ";
+						cin >> updateOption;
+
+						switch (updateOption)
+						{
+
+						case 1:
+						{
+							string newName;
+							cout << "New Name: ";
+							cin >> newName;
+							tempUser->SetName(newName);
+
+							break;
+						}
+
+						case 2:
+						{
+							string newSurname;
+							cout << "New Surname: ";
+							cin >> newSurname;
+							tempUser->SetSurname(newSurname);
+						}
+
+						case 3:
+						{
+							string newUsername;
+							cout << "New Username: ";
+							cin >> newUsername;
+							tempUser->SetUsername(newUsername);
+						}
+
+						case 4:
+						{
+							string newPassword;
+							cout << "New Password: ";
+							cin >> newPassword;
+							tempUser->SetPassword(newPassword);
+
+							break;
+						}
+
+						case 5:
+						{
+							string newPaternalName;
+							cout << "New Paternal Name: ";
+							cin >> newPaternalName;
+							tempUser->SetPaternalName(newPaternalName);
+
+							break;
+						}
+
+						case 6:
+						{
+							string newAddress;
+							cout << "New Address: ";
+							cin >> newAddress;
+							tempUser->SetAddress(newAddress);
+
+							break;
+						}
+
+						case 7:
+						{
+							string newPhoneNumber;
+							cout << "New Phone Number: ";
+							cin >> newPhoneNumber;
+							tempUser->SetPhoneNumber(newPhoneNumber);
+
+							break;
+						}
+
+						default:
+
+							cout << "\nChoice Correct Choice.\n";
+
+							break;
+						}
+					}
 
 					case 3:	   // Delete User
 
@@ -942,20 +1128,69 @@ int main()
 
 				case 3:	   // Test Management
 
+					cout << "1.Add Category\n2.Add Test\n3.Add Question\n\nYour Choice: ";
+					cin >> adminChoice4;
+
 					switch (adminChoice4)
 					{
 
 					case 1:	   // Add Category
+					{
+						string categoryName;
 
+						cout << "Enter Category Name: ";
+						cin >> categoryName;
 
+						admin->AddCategory(categoryName);
+					}
 
 					case 2:	   // Add Test
+					{
+						string testName;
+						int categoryInput;
 
+						for (size_t i = 0; i < database.GetCategories().size();i++)
+						{
+							cout << i + 1 << "." << database.GetCategories()[i] << endl;
+						}
 
+						cout << "\nYour Choice: ";
+						cin >> categoryInput;
+
+						cout << "Enter Test Name: ";
+						cin >> testName;
+
+						admin->AddTest(testName, categoryInput);
+
+						break;
+					}
 
 					case 3:	   // Add Question
+					{
+						string questionName;
+						int categoryInput2, testInput, questionTypeInput;
 
+						for (size_t i = 0; i < database.GetCategories().size();i++)
+						{
+							cout << i + 1 << "." << database.GetCategories()[i] << endl;
+						}
 
+						cout << "\nYour Category Choice: ";
+						cin >> categoryInput2;
+
+						for (size_t i = 0; i < database.GetCategories()[categoryInput2 - 1]->GetTests().size(); i++)
+						{
+							cout << i + 1 << "." << database.GetCategories()[categoryInput2 - 1]->GetTests()[i] << endl;
+						}
+
+						cout << "Your Test Choice: ";
+						cin >> testInput;
+
+						cout << "\n1. True/False Question\n2. Open-Ended Question\n3. Four-Options Question\n\nYour Choice: ";
+						cin >> questionTypeInput;
+
+						admin->AddQuestion(categoryInput2, testInput, questionTypeInput);
+					}
 
 					case 4:	   // Category Export/Import
 

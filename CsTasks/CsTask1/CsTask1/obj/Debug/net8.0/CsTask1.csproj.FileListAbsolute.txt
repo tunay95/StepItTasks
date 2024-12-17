@@ -1,0 +1,15 @@
+C:\Users\TUNAY\source\repos\StepItTasks\CsTasks\CsTask1\CsTask1\bin\Debug\net8.0\CsTask1.exe
+C:\Users\TUNAY\source\repos\StepItTasks\CsTasks\CsTask1\CsTask1\bin\Debug\net8.0\CsTask1.deps.json
+C:\Users\TUNAY\source\repos\StepItTasks\CsTasks\CsTask1\CsTask1\bin\Debug\net8.0\CsTask1.runtimeconfig.json
+C:\Users\TUNAY\source\repos\StepItTasks\CsTasks\CsTask1\CsTask1\bin\Debug\net8.0\CsTask1.dll
+C:\Users\TUNAY\source\repos\StepItTasks\CsTasks\CsTask1\CsTask1\bin\Debug\net8.0\CsTask1.pdb
+C:\Users\TUNAY\source\repos\StepItTasks\CsTasks\CsTask1\CsTask1\obj\Debug\net8.0\CsTask1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\TUNAY\source\repos\StepItTasks\CsTasks\CsTask1\CsTask1\obj\Debug\net8.0\CsTask1.AssemblyInfoInputs.cache
+C:\Users\TUNAY\source\repos\StepItTasks\CsTasks\CsTask1\CsTask1\obj\Debug\net8.0\CsTask1.AssemblyInfo.cs
+C:\Users\TUNAY\source\repos\StepItTasks\CsTasks\CsTask1\CsTask1\obj\Debug\net8.0\CsTask1.csproj.CoreCompileInputs.cache
+C:\Users\TUNAY\source\repos\StepItTasks\CsTasks\CsTask1\CsTask1\obj\Debug\net8.0\CsTask1.sourcelink.json
+C:\Users\TUNAY\source\repos\StepItTasks\CsTasks\CsTask1\CsTask1\obj\Debug\net8.0\CsTask1.dll
+C:\Users\TUNAY\source\repos\StepItTasks\CsTasks\CsTask1\CsTask1\obj\Debug\net8.0\refint\CsTask1.dll
+C:\Users\TUNAY\source\repos\StepItTasks\CsTasks\CsTask1\CsTask1\obj\Debug\net8.0\CsTask1.pdb
+C:\Users\TUNAY\source\repos\StepItTasks\CsTasks\CsTask1\CsTask1\obj\Debug\net8.0\CsTask1.genruntimeconfig.cache
+C:\Users\TUNAY\source\repos\StepItTasks\CsTasks\CsTask1\CsTask1\obj\Debug\net8.0\ref\CsTask1.dll

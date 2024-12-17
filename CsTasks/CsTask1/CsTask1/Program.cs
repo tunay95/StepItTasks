@@ -80,7 +80,7 @@ RequestItem requestItem = new()
 Request request = new()
 {
 	client = client,
-	orderCode = "OC1",
+	orderCode = "OC11",
 	dateTime = DateTime.Now,
 	orderedCommodities = new() { article1, article2 },
 	payType=PayType.Card

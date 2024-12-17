@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CsTask2")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e417c12e580b1bfb2841e4560bb346885ee4cde0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d47af0a9acb502afa38527cce0a7b72d8cd28b3b")]
 [assembly: System.Reflection.AssemblyProductAttribute("CsTask2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CsTask2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,4 +1,5 @@
-﻿#region Task
+﻿
+#region Task
 
 /*
 "Veb-sayt" class-ı yaradın. Class-ın field-lərində aşağıdakı məlumatları saxlamaq lazımdır:
@@ -20,23 +21,62 @@ Bu tapşırığı iki variantda etmək lazımdır: Primary constructor ilə və 
 #endregion
 
 
+//Website website = new("Globus", "www.globus.az", "Cografiya sevenlerin sayti", "192.168.1.1");
+//Console.WriteLine(website);
+
+//Website2 website2 = new("Globus", "www.globus.az", "Cografiya sevenlerin sayti", "192.168.1.1");
+//Console.WriteLine(website2);
+
+
+
 // With Primary Constructor
 
 class Website(string siteName, string siteAddress, string siteDescription, string ipAddress)
 {
-    public string SiteName { get=>siteName; set=>siteName=value; }
-    public string SiteAddress { get=> siteAddress; set=> siteAddress = value; }
-    public string SiteDescription { get=> siteDescription; set=> siteDescription = value; }
-    public string IpAddress { get=> ipAddress; set=> ipAddress = value; }
+	public string SiteName { get; set; } = siteName;
+	public string SiteAddress { get; set; } = siteAddress;
+	public string SiteDescription { get; set; } = siteDescription;
+	public string IpAddress { get; set; } = ipAddress;
 
 	public override string ToString()
 	{
-		return $"Site Name: {siteName}";
+		return $@"Site Name: {SiteName}
+Site Address: {SiteAddress}
+Site Description: {SiteDescription}
+Ip Address: {IpAddress}";
 	}
 
-	public void InputData()
-    {
-
-    }
 }
 
+
+// Without Primary Constructor
+
+class Website2
+{
+	private string siteName;
+	private string siteAddress;
+	private string siteDescription;
+	private string ipAddress;
+
+	public Website2(string siteName, string siteAddress, string siteDescription, string ipAddress)
+	{
+		this.siteName = siteName;
+		this.siteAddress = siteAddress;
+		this.siteDescription = siteDescription;
+		this.ipAddress = ipAddress;
+	}
+
+	public string GetSiteName() => siteName;
+	public string GetSiteAddress() => siteAddress;
+	public string GetSiteDescription() => siteDescription;
+	public string GetIpAddress() => ipAddress;
+
+	public override string ToString()
+	{
+		return $@"Site Name: {siteName}
+Site Address: {siteAddress}
+Site Description: {siteDescription}
+Ip Address: {ipAddress}";
+	}
+
+}

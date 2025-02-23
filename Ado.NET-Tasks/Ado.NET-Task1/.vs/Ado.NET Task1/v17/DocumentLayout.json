@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\TUNAY\\source\\repos\\StepItTasks\\Ado.NET Tasks\\Ado.NET Task1\\",
+  "WorkspaceRootPath": "C:\\Users\\TUNAY\\source\\repos\\StepItTasks\\Ado.NET-Tasks\\Ado.NET-Task1\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{D77F57C6-B0AC-4C83-ADE6-68D30E56C28A}|Ado.NET Task1\\Ado.NET Task1.csproj|c:\\users\\tunay\\source\\repos\\stepittasks\\ado.net tasks\\ado.net task1\\ado.net task1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{D77F57C6-B0AC-4C83-ADE6-68D30E56C28A}|Ado.NET Task1\\Ado.NET Task1.csproj|c:\\users\\tunay\\source\\repos\\stepittasks\\ado.net-tasks\\ado.net-task1\\ado.net task1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{D77F57C6-B0AC-4C83-ADE6-68D30E56C28A}|Ado.NET Task1\\Ado.NET Task1.csproj|solutionrelative:ado.net task1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -26,22 +26,21 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "dbo.Users [Data]",
+              "Title": "dbo.Users.sql",
               "DocumentMoniker": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/Users/True/SqlTable/dbo.Users.sql",
-              "ToolTip": "dbo.Users [Data]",
+              "ToolTip": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/Users/True/SqlTable/dbo.Users.sql",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2025-02-23T16:08:46.38Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-23T16:08:46.38Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\TUNAY\\source\\repos\\StepItTasks\\Ado.NET Tasks\\Ado.NET Task1\\Ado.NET Task1\\Program.cs",
+              "DocumentMoniker": "C:\\Users\\TUNAY\\source\\repos\\StepItTasks\\Ado.NET-Tasks\\Ado.NET-Task1\\Ado.NET Task1\\Program.cs",
               "RelativeDocumentMoniker": "Ado.NET Task1\\Program.cs",
-              "ToolTip": "C:\\Users\\TUNAY\\source\\repos\\StepItTasks\\Ado.NET Tasks\\Ado.NET Task1\\Ado.NET Task1\\Program.cs",
+              "ToolTip": "C:\\Users\\TUNAY\\source\\repos\\StepItTasks\\Ado.NET-Tasks\\Ado.NET-Task1\\Ado.NET Task1\\Program.cs",
               "RelativeToolTip": "Ado.NET Task1\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAMIAAAAAAAAAAAAIwNAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-21T13:04:11.13Z",
               "EditorCaption": ""

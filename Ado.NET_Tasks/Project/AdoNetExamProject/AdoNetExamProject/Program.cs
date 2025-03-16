@@ -3,14 +3,16 @@ using AdoNetExamProject.Entities;
 using AdoNetExamProject.Repositories.Implements;
 using AdoNetExamProject.Services.Implements;
 using AdoNetExamProject.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Security.Cryptography;
 using System.Text;
 
 
-//Console.InputEncoding = Encoding.UTF8;
-//Console.OutputEncoding = Encoding.UTF8;
+Console.InputEncoding = Encoding.UTF8;
+Console.OutputEncoding = Encoding.UTF8;
 
-//AppDbContext dbContext = new();
 //OptionRepository optionRepo = new(dbContext);
 //OptionService optionSer = new OptionService(optionRepo);
 
@@ -328,130 +330,894 @@ using System.Text;
 
 #endregion
 
+Menu();
 
 
-//static void Menu()
-//{
+static void Menu()
+{
+	Console.Clear();
 
-//	Console.Write(@"1. Admin
-//2. User
-//3. Exit
+	AppDbContext dbContext = new();
+	Repository<User> userRepository = new(dbContext);
+	UserService userService2 = new(userRepository);
+	Service<User> userService = new UserService(userRepository);
 
-//Your Choice: ");
+	Console.Write(@"1. Admin
+2. User
+3. Exit
 
-//	int choice;
-//	int.TryParse(Console.ReadLine(), out choice);
+Your Choice: ");
 
-//	switch (choice)
-//	{
-//		case 1:
+	int choice;
+	int.TryParse(Console.ReadLine(), out choice);
 
-//			//AdminMenu();
-//			break;
-
-//		case 2:
-
-//			//UserMenu();
-//			break;
-
-//		case 3:
-
-//			return;
-
-//		default:
-
-//			Console.WriteLine("Choose the correct choice.");
-//			break;
-//	}
-
-//}
+	if (choice == 3) return;
 
 
-//static void Login(int choice)
-//{
+	Console.Clear();
+
+	UserRole userRole;
+
+	if (choice == 1) userRole = UserRole.Admin;
+	else userRole = UserRole.User;
+
+
+	Console.Write("1. Login\n2. Register\n\nYour Choice: ");
+	int userLogRegChoice;
+	int.TryParse(Console.ReadLine(), out userLogRegChoice);
+
+	switch (userLogRegChoice)
+	{
+		case 1:
+
+			Console.Write("Username: ");
+			string usernameUserLogin = Console.ReadLine();
+
+			Console.Write("Password: ");
+			string passwordUserLogin = Console.ReadLine();
+
+			if (userService2.Login(usernameUserLogin, passwordUserLogin, userRole))
+			{
+				if (userRole == UserRole.Admin) AdminMenu(usernameUserLogin);
+				else UserMenu(usernameUserLogin);
+			}
+
+			else
+			{
+				Console.WriteLine("\nUsername or Password is wrong.");
+			}
+
+			break;
+
+		case 2:
+
+			Console.Write("FirstName: ");
+			string firstnameAdminReg = Console.ReadLine();
+
+			Console.Write("LastName: ");
+			string lastnameAdminReg = Console.ReadLine();
+
+			Console.Write("Username: ");
+			string usernameAdminReg = Console.ReadLine();
+
+			Console.Write("Password: ");
+			string passwordAdminReg = Console.ReadLine();
+
+			Console.Write("BirthDate(YYYY - MM - DD): ");
+			DateTime birthdateAdminReg = DateTime.Parse(Console.ReadLine());
+
+			User newUser = userService.Create(firstnameAdminReg, lastnameAdminReg, usernameAdminReg, passwordAdminReg, birthdateAdminReg, userRole);
+
+			Console.WriteLine("\nAccount Created");
+
+			break;
+
+		default:
+
+			Console.WriteLine("Choose the correct choice.");
+			break;
+	}
+
+	Thread.Sleep(2000);
+
+	Menu();
+
+}
+
+
+static void AdminMenu(string username)
+{
+
+	AppDbContext dbContext2 = new AppDbContext();
+
+	Console.WriteLine(@$"-------------- * Account - {username} * --------------
+
+Choose the entity on which you will implement CRUD operations:
+
+1. Category
+2. Quiz
+3. Question
+4. Option
+5. Quiz Result
+6. User
+
+7. Back
+8. Exit
+
+Your Choice: ");
+
+
+	int choice;
+	int.TryParse(Console.ReadLine(), out choice);
+
+
+	Console.Clear();
+
+
+	Console.WriteLine(@$"-------------- * Account - {username} * --------------
+
+Choose the entity on which you will implement CRUD operations:
+
+1. Get All
+2. Get By Id
+3. Create
+4. Update
+5. Delete
+6. Delete All
+
+7. Back
+8. Exit
+
+Your Choice: ");
+
+
+	int choice2;
+	int.TryParse(Console.ReadLine(), out choice2);
+
+
+	switch (choice)         // Which Entity
+	{
+
+		case 1:         // Category	
+
+			Repository<Category> repositoryCategory = new(dbContext2);
+			Service<Category> serviceCategory = new Service<Category>(repositoryCategory);
+
+			switch (choice2)
+			{
+				case 1:
+
+					var categories = serviceCategory.GetAll();
+
+					foreach (var category in categories)
+					{
+						Console.WriteLine($"Id: {category.Id} -> {category.Name}");
+					}
+
+					break;
+
+				case 2:
+
+					Console.Write("\nEnter Id: ");
+					int idCategoryFind;
+					int.TryParse(Console.ReadLine(), out idCategoryFind);
+
+					var category2 = serviceCategory.GetById(idCategoryFind);
+
+					Console.WriteLine($"Id: {category2.Id} -> {category2.Name}");
+
+					break;
+
+
+				case 3:
+
+					Console.Write("Name: ");
+					string categoryCreateName = Console.ReadLine();
+
+					serviceCategory.Create(categoryCreateName);
+
+					Console.WriteLine("\nNew Category Created.");
+
+					break;
+
+				case 4:
+
+					Console.Write("\nEnter Id: ");
+					int idCategory;
+					int.TryParse(Console.ReadLine(), out idCategory);
+
+
+					Console.Write(@"
+				Which Property do you want to update?
+
+				1. Statement
+
+				Your Answer: ");
+
+					int choiceCategory;
+					int.TryParse(Console.ReadLine(), out choiceCategory);
+
+
+					switch (choice)
+					{
+						case 1:
+
+							Console.Write("\nStatement: ");
+							string statementUpdate = Console.ReadLine();
+
+							var updatedCategory = serviceCategory.Update(idCategory);
+
+							break;
+
+
+						default:
+
+							Console.WriteLine("\nEnter The Correct Choice.");
+
+							break;
+
+					}
+
+					break;
+
+				case 5:
+
+					Console.Write("\nEnter Id: ");
+					int idDeletedCategory;
+					int.TryParse(Console.ReadLine(), out idDeletedCategory);
+
+					serviceCategory.DeleteById(idDeletedCategory);
+
+					Console.WriteLine("\nCategory has been deleted.");
+
+					break;
+
+				case 6:
+
+					serviceCategory.DeleteAll();
+					Console.WriteLine("\nAll Categories was deleted. ");
+
+					break;
+
+				default:
+
+					break;
+
+
+			}
+
+			Console.WriteLine("\nOption updated successfully.");
+
+			break;
+
+
+		case 2:         // Quiz
+
+			Repository<Quiz> repositoryQuiz = new(dbContext2);
+			Service<Quiz> serviceQuiz = new(repositoryQuiz);
+
+			break;
+
+
+		case 3:         // Question
+
+			Repository<Question> repositoryQuestion = new (dbContext2);
+			Service<Question> serviceQuestion = new QuestionService(repositoryQuestion);
+
+			switch (choice2)
+			{
+				case 1:
+
+					var questions = serviceQuestion.GetAll();
+
+					foreach (var quest in questions)
+					{
+						Console.WriteLine($"Id: {quest.Id} -> {quest.Statement} | QuizId: {quest.QuizId}");
+					}
+					break;
+
+				case 2:
+
+					Console.Write("\nEnter Id: ");
+					int id;
+					int.TryParse(Console.ReadLine(), out id);
+
+					var quest2 = serviceQuestion.GetById(id);
+
+					Console.WriteLine($"Id: {quest2.Id} -> {quest2.Statement} | QuizId: {quest2.QuizId}");
+
+					break;
+
+				case 3:
+
+					Console.Write("Statement: ");
+					string statement = Console.ReadLine();
+
+
+					Console.Write("QuestionId: ");
+					int questionId;
+					int.TryParse(Console.ReadLine(), out questionId);
+
+					serviceQuestion.Create(statement, questionId);
+
+					Console.WriteLine("\nNew Option Created.");
+
+					break;
+
+				case 4:
+
+					Console.Write("\nEnter Id: ");
+					int idQuestion;
+					int.TryParse(Console.ReadLine(), out idQuestion);
+
+
+					Console.Write(@"
+				Which Property do you want to update?
+
+				1. Statement
+				2. QuestionId
+				3. Both
+
+				Your Answer: ");
+
+					int choiceQuestion;
+					int.TryParse(Console.ReadLine(), out choiceQuestion);
+
+
+					switch (choiceQuestion)
+					{
+						case 1:
+
+							Console.Write("\nStatement: ");
+							string statementUpdate = Console.ReadLine();
+
+							var updatedQuestion = serviceQuestion.Update(idQuestion, statementUpdate, null, null);
+
+							break;
+
+
+						case 2:
+
+							Console.Write("\nQuizId: ");
+							int quizIdQuestion;
+							int.TryParse(Console.ReadLine(), out quizIdQuestion);
+
+							var updatedOption3 = serviceQuestion.Update(idQuestion, null, null, quizIdQuestion);
+
+							break;
+
+						case 3:
+
+							Console.Write("\nText: ");
+							string textOption2 = Console.ReadLine();
+							Console.Write("IsCorrect: ");
+
+							bool isCorrectOption2;
+							bool.TryParse(Console.ReadLine(), out isCorrectOption2);
+
+							Console.Write("QuizId: ");
+							int quizIdQuestion2;
+							int.TryParse(Console.ReadLine(), out quizIdQuestion2);
+
+							var updatedOption4 = serviceQuestion.Update(idQuestion, textOption2, null, quizIdQuestion2);
+
+							break;
+
+						default:
+
+							Console.WriteLine("\nEnter The Correct Choice.");
+
+							break;
+
+					}
+
+					break;
+
+				case 5:
+
+					Console.Write("\nEnter Id: ");
+					int idDeleteqQuestion;
+					int.TryParse(Console.ReadLine(), out idDeleteqQuestion);
+
+					serviceQuestion.DeleteById(idDeleteqQuestion);
+
+					Console.WriteLine("\nOption has been deleted.");
+
+					break;
+
+				case 6:
+
+					serviceQuestion.DeleteAll();
+					break;
+
+				default:
+
+					break;
+
+
+			}
+
+			Console.WriteLine("\nOption updated successfully.");
+
+			break;
+
+
+		case 4:         // Option
+
+			Repository<Option> repositoryOption = new(dbContext2);
+			Service<Option> serviceOption = new(repositoryOption);
+
+			switch (choice2)
+			{
+				case 1:
+
+					var options = serviceOption.GetAll();
+
+					foreach (var opt in options)
+					{
+						Console.WriteLine($"{opt.Id}  {opt.Text}  {opt.IsCorrect}  {opt.QuestionId}");
+					}
+					break;
+
+				case 2:
+
+					Console.Write("\nEnter Id: ");
+					int id;
+					int.TryParse(Console.ReadLine(), out id);
+
+					var option = serviceOption.GetById(id);
+
+					Console.WriteLine($"{option.Id}  {option.Text}  {option.IsCorrect}  {option.QuestionId}");
+
+					break;
+
+				case 3:
+
+					Console.Write("Text: ");
+					string text = Console.ReadLine();
+
+					Console.Write("IsCorrect: ");
+					bool isCorrect;
+					bool.TryParse(Console.ReadLine(), out isCorrect);
+
+					Console.Write("QuestionId: ");
+					int questionId;
+					int.TryParse(Console.ReadLine(), out questionId);
+
+					serviceOption.Create(text, isCorrect, questionId);
+
+					Console.WriteLine("\nNew Option Created.");
+
+					break;
+
+				case 4:
+
+					Console.Write("\nEnter Id: ");
+					int idOption;
+					int.TryParse(Console.ReadLine(), out idOption);
+
+
+					Console.Write(@"
+				Which Property do you want to update?
+
+				1. Text
+				2. Accuracy
+				3. Question Id
+				4. All
+
+				Your Answer: ");
+
+					int choiceOption;
+					int.TryParse(Console.ReadLine(), out choiceOption);
+
+
+					switch (choice)
+					{
+						case 1:
+
+							Console.Write("\nText: ");
+							string textOption = Console.ReadLine();
+
+							var updatedOption = serviceOption.Update(idOption, textOption, null, null);
+
+							break;
+
+						case 2:
+
+							Console.Write("\nIsCorrect: ");
+							bool isCorrectOption;
+							bool.TryParse(Console.ReadLine(), out isCorrectOption);
+
+							var updatedOption2 = serviceOption.Update(idOption, null, isCorrectOption, null);
+
+							break;
+
+						case 3:
+
+							Console.Write("\nQuestionId: ");
+							int questionIdOption;
+							int.TryParse(Console.ReadLine(), out questionIdOption);
+
+							var updatedOption3 = serviceOption.Update(idOption, null, null, questionIdOption);
+
+							break;
+
+						case 4:
+
+							Console.Write("\nText: ");
+							string textOption2 = Console.ReadLine();
+							Console.Write("IsCorrect: ");
+
+							bool isCorrectOption2;
+							bool.TryParse(Console.ReadLine(), out isCorrectOption2);
+
+							Console.Write("QuestionId: ");
+							int questionIdOption2;
+							int.TryParse(Console.ReadLine(), out questionIdOption2);
+
+							var updatedOption4 = serviceOption.Update(idOption, textOption2, isCorrectOption2, questionIdOption2);
+
+							break;
+
+						default:
+
+							Console.WriteLine("\nEnter The Correct Choice.");
+
+							break;
+					}
+
+					Console.WriteLine("\nOption updated successfully.");
+
+					break;
+
+				case 5:
+
+					Console.Write("\nEnter Id: ");
+					int idDeleteOption;
+					int.TryParse(Console.ReadLine(), out idDeleteOption);
+
+					serviceOption.DeleteById(idDeleteOption);
+
+					Console.WriteLine("\nOption has been deleted.");
+
+					break;
+
+				case 6:
+
+					serviceOption.DeleteAll();
+
+					break;
+
+				default:
+
+					Console.WriteLine("\n\nChoose The Correct Choice.");
+
+					break;
+			}
+
+			break;
+
+
+		case 5:     // UserQuiz
+
+			Repository<UserQuiz> repositoryUserQuiz = new(dbContext2);
+			Service<UserQuiz> serviceUserQuiz = new(repositoryUserQuiz);
+
+			switch (choice2)
+			{
+				case 1:
+
+					var userquizzes = serviceUserQuiz.GetAll();
+
+					foreach (var uq in userquizzes)
+					{
+						Console.WriteLine($"{uq.Id}  {uq.UserId}  {uq.QuizId}  {uq.CorrectAnswerCount}  {uq.WrongAnswerCount}  {uq.PassedAnswerCount}  {uq.SuccessRate}");
+					}
+
+					break;
+
+				case 2:
+
+					Console.Write("\nEnter Id: ");
+					int id;
+					int.TryParse(Console.ReadLine(), out id);
+
+					var uq2 = serviceUserQuiz.GetById(id);
+
+					Console.WriteLine($"{uq2.Id}  {uq2.UserId}  {uq2.QuizId}  {uq2.CorrectAnswerCount}  {uq2.WrongAnswerCount}  {uq2.PassedAnswerCount}  {uq2.SuccessRate}");
+
+					break;
+
+				case 3:
+
+					Console.Write("UserId: ");
+					int userId;
+					int.TryParse(Console.ReadLine(), out userId);
+
+					Console.Write("QuestionId: ");
+					int quizId;
+					int.TryParse(Console.ReadLine(), out quizId);
+
+					Console.Write("Rank: ");
+					int rank;
+					int.TryParse(Console.ReadLine(), out rank);
+
+					Console.Write("SuccessRate: ");
+					int successRate;
+					int.TryParse(Console.ReadLine(), out successRate);
+
+					Console.Write("CorrectAnswerCount: ");
+					int correctAnswerCount;
+					int.TryParse(Console.ReadLine(), out correctAnswerCount);
+
+					Console.Write("WrongAnswerCount: ");
+					int wrongAnswerCount;
+					int.TryParse(Console.ReadLine(), out wrongAnswerCount);
+
+					Console.Write("PassedAnswerCount: ");
+					int passedAnswerCount;
+					int.TryParse(Console.ReadLine(), out passedAnswerCount);
+
+					serviceUserQuiz.Create(userId, quizId, rank, successRate, correctAnswerCount, wrongAnswerCount, passedAnswerCount);
+
+					Console.WriteLine("\nNew Quiz Result Created.");
+
+					break;
+
+				case 4:
+
+					Console.Write("\nEnter Id: ");
+					int idResult;
+					int.TryParse(Console.ReadLine(), out idResult);
+
+
+					Console.Write(@"
+				Which Property do you want to update?
+
+				1. Correct Answer Count
+				2. Passed Answer Count
+				3. Wrong Answer Count		
+				4. Success Rate
+				5. User Id
+				6. Quiz Id
+				7. Rank
+				8. All
+
+				Your Answer: ");
+
+					int choiceResult;
+					int.TryParse(Console.ReadLine(), out choiceResult);
+
+
+					switch (choice)
+					{
+						case 1:
+
+							Console.Write("CorrectAnswerCount: ");
+							int correctAnswerCount2;
+							int.TryParse(Console.ReadLine(), out correctAnswerCount2);
+
+							var updatedOption = serviceUserQuiz.Update(idResult, correctAnswerCount2, null, null, null, null, null, null);
+
+							break;
+
+						case 2:
+
+							Console.Write("WrongAnswerCount: ");
+							int wrongAnswerCount2;
+							int.TryParse(Console.ReadLine(), out wrongAnswerCount2);
+
+							var updatedOption2 = serviceUserQuiz.Update(idResult, null, wrongAnswerCount2, null, null, null, null, null);
+
+
+							break;
+
+						case 3:
+
+							Console.Write("PassedAnswerCount: ");
+							int passedAnswerCount2;
+							int.TryParse(Console.ReadLine(), out passedAnswerCount2);
+
+							var updatedOption3 = serviceUserQuiz.Update(idResult, null, null, passedAnswerCount2, null, null, null, null);
+
+							break;
+
+
+						case 4:
+
+							Console.Write("SuccessRate: ");
+							int successRate2;
+							int.TryParse(Console.ReadLine(), out successRate2);
+
+							var updatedOption4 = serviceUserQuiz.Update(idResult, null, null, null, successRate2, null, null, null);
+
+							break;
+
+						case 5:
+
+							Console.Write("UserId: ");
+							int userId2;
+							int.TryParse(Console.ReadLine(), out userId2);
+
+							var updatedOption5 = serviceUserQuiz.Update(idResult, null, null, null, null, userId2, null, null);
+
+							break;
+
+
+						case 6:
+
+							Console.Write("QuestionId: ");
+							int quizId2;
+							int.TryParse(Console.ReadLine(), out quizId2);
+
+							var updatedOption6 = serviceUserQuiz.Update(idResult, null, null, null, null, null, quizId2, null);
+
+							break;
+
+
+						case 7:
+
+							Console.Write("Rank: ");
+							int rank2;
+							int.TryParse(Console.ReadLine(), out rank2);
+
+							var updatedOption7 = serviceUserQuiz.Update(idResult, null, null, null, null, null, null, null, rank2);
+
+							break;
+
+						case 8:
+
+							Console.Write("UserId: ");
+							int userId3;
+							int.TryParse(Console.ReadLine(), out userId3);
+
+							Console.Write("QuestionId: ");
+							int quizId3;
+							int.TryParse(Console.ReadLine(), out quizId3);
+
+							Console.Write("Rank: ");
+							int rank3;
+							int.TryParse(Console.ReadLine(), out rank3);
+
+							Console.Write("SuccessRate: ");
+							int successRate3;
+							int.TryParse(Console.ReadLine(), out successRate3);
+
+							Console.Write("CorrectAnswerCount: ");
+							int correctAnswerCount3;
+							int.TryParse(Console.ReadLine(), out correctAnswerCount3);
+
+							Console.Write("WrongAnswerCount: ");
+							int wrongAnswerCount3;
+							int.TryParse(Console.ReadLine(), out wrongAnswerCount3);
+
+							Console.Write("PassedAnswerCount: ");
+							int passedAnswerCount3;
+							int.TryParse(Console.ReadLine(), out passedAnswerCount3);
+
+							serviceUserQuiz.Create(idResult,userId3, quizId3, rank3, successRate3, correctAnswerCount3, wrongAnswerCount3, passedAnswerCount3);
+
+							break;
+
+						default:
+
+							Console.WriteLine("\nEnter The Correct Choice.");
+
+							break;
+					}
+
+					Console.WriteLine("\nOption updated successfully.");
+
+					break;
+
+				case 5:
+
+					Console.Write("\nEnter Id: ");
+					int idDeleteResult;
+					int.TryParse(Console.ReadLine(), out idDeleteResult);
+
+					serviceUserQuiz.DeleteById(idDeleteResult);
+
+					Console.WriteLine("\nResult has been deleted.");
+
+					break;
+
+				case 6:
+
+					serviceUserQuiz.DeleteAll();
+
+					break;
+
+				default:
+
+					Console.WriteLine("\n\nChoose The Correct Choice.");
+
+					break;
+			}
+
+			break;
+
+
+		case 6:     // User
+
+			Repository<User> repositoryUser = new(dbContext2);
+			Service<User> serviceUser = new(repositoryUser);
 
 
 
+			break;
 
-//}
+		case 7:
 
+			Menu();
+			break;
 
-//static void Register(int choice)
-//{
+		case 8:
 
-//	Console.Write("FirstName: ");
-//	string firstname = Console.ReadLine();
+			return;
 
-//	Console.WriteLine("LastName: ");
-//	string lastname = Console.ReadLine();
+		default:
 
-//	Console.Write("FirstName: ");
-//	string username = Console.ReadLine();
-
-//	Console.Write("Password: ");
-//	string password = Console.ReadLine();
-
-//	Console.Write("BirthDate: ");
-//	string birthdate = Console.ReadLine();
+			Console.WriteLine("Choose the correct choice.");
+			break;
+	}
 
 
-//}
-
-
-//static void AdminMenu() { }
-
-
-//static void UserMenu()
-//{
-
-//	Console.WriteLine(@"
-//1. Start Quiz
-//2. Preious Results
-//3. Top 20
-//4. Settings
-//5. Log out
-
-//Your Choice: ");
-
-//	int choice;
-//	int.TryParse(Console.ReadLine(), out choice);
-
-//	switch (choice)
-//	{
-//		case 1:
+}
 
 
 
-//		case 2:
+static void UserMenu(string username)
+{
+
+	Console.WriteLine(@"
+1. Start Quiz
+2. Preious Results
+3. Top 20
+4. Settings
+5. Log out
+
+Your Choice: ");
+
+	int choice;
+	int.TryParse(Console.ReadLine(), out choice);
+
+	switch (choice)
+	{
+		case 1:
 
 
 
-//		case 3:
+		case 2:
 
 
 
-//		case 4:
+		case 3:
 
 
 
-//		case 5:
+		case 4:
 
 
 
-//		default:
-
-//			Console.WriteLine("Choose The correct choice");
-//			break;
-//	}
+		case 5:
 
 
-//}
+
+		default:
+
+			Console.WriteLine("Choose The correct choice");
+			break;
+	}
+
+
+}
 
 
 
 #region Get All Options
 
-//var options = optionSer.GetAll();
+//var options = optionService.GetAll();
 
 //foreach (var option in options)
 //{
@@ -462,11 +1228,12 @@ using System.Text;
 
 #region Get By Id Option
 
+
 //Console.Write("\nEnter Id: ");
 //int id;
 //int.TryParse(Console.ReadLine(), out id);
 
-//var option = optionSer.GetById(id);
+//var option = optionService.GetById(id);
 
 //Console.WriteLine($"{option.Id}  {option.Text}  {option.IsCorrect}  {option.QuestionId}");
 
@@ -486,7 +1253,7 @@ using System.Text;
 //int questionId;
 //int.TryParse(Console.ReadLine(), out questionId);
 
-//optionSer.Create(text, isCorrect, questionId);
+//optionService.Create(text, isCorrect, questionId);
 
 //Console.WriteLine("\nNew Option Created.");
 
@@ -499,7 +1266,7 @@ using System.Text;
 //int.TryParse(Console.ReadLine(), out id);
 
 
-//Console.WriteLine(@"
+//Console.Write(@"
 //Which Property do you want to update?
 
 //1. Text
@@ -517,36 +1284,36 @@ using System.Text;
 //{
 //	case 1:
 
-//		Console.Write("Text: ");
+//		Console.Write("\nText: ");
 //		string text = Console.ReadLine();
 
-//		var updatedOption = optionSer.Update(id, text, null, null);
+//		var updatedOption = optionService.Update(id, text, null, null);
 
 //		break;
 
 //	case 2:
 
-//		Console.Write("IsCorrect: ");
+//		Console.Write("\nIsCorrect: ");
 //		bool isCorrect;
 //		bool.TryParse(Console.ReadLine(), out isCorrect);
 
-//		var updatedOption2 = optionSer.Update(id, null, isCorrect, null);
+//		var updatedOption2 = optionService.Update(id, null, isCorrect, null);
 
 //		break;
 
 //	case 3:
 
-//		Console.Write("QuestionId: ");
+//		Console.Write("\nQuestionId: ");
 //		int questionId;
 //		int.TryParse(Console.ReadLine(), out questionId);
 
-//		var updatedOption3 = optionSer.Update(id, null, null, questionId);
+//		var updatedOption3 = optionService.Update(id, null, null, questionId);
 
 //		break;
 
 //	case 4:
 
-//		Console.Write("Text: ");
+//		Console.Write("\nText: ");
 //		string text2 = Console.ReadLine();
 //		Console.Write("IsCorrect: ");
 
@@ -557,11 +1324,13 @@ using System.Text;
 //		int questionId2;
 //		int.TryParse(Console.ReadLine(), out questionId2);
 
+//		var updatedOption4 = optionService.Update(id, text2, isCorrect2, questionId2);
+
 //		break;
 
 //	default:
 
-//        Console.WriteLine("Enter The Correct Choice.");
+//		Console.WriteLine("\nEnter The Correct Choice.");
 
 //		break;
 //}
@@ -587,5 +1356,4 @@ using System.Text;
 //optionSer.DeleteAll();
 
 #endregion
-
 

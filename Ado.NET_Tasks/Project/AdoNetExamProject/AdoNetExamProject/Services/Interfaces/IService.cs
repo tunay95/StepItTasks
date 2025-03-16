@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AdoNetExamProject.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +11,9 @@ namespace AdoNetExamProject.Services.Interfaces
 	{
 		IEnumerable<T> GetAll();
 		T GetById(int id);
+		T Create(params object[] parameters);
+		T Update(params object[] parameters);
+		void DeleteById(int id);
+		void DeleteAll();
 	}
 }

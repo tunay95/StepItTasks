@@ -9,42 +9,38 @@ using System.Threading.Tasks;
 
 namespace AdoNetExamProject.Services.Implements
 {
-	public class QuestionService : IQuestionService
+	public class QuestionService : Service<Question>
 	{
-		private readonly QuestionRepository _questionRepository;
-
-		public QuestionService(QuestionRepository questionRepository)
+		public QuestionService(Repository<Question> repository) : base(repository)
 		{
-			_questionRepository = questionRepository;
 		}
 
+		public override IEnumerable<Question> GetAll() => _repository.GetAll().ToList();
 
-		public IEnumerable<Question> GetAll() => _questionRepository.GetAll().ToList();
 
-
-		public Question GetById(int id)
+		public override Question GetById(int id)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id);
-			return _questionRepository.GetById(id);
+			return _repository.GetById(id);
 		}
 
 
-		public Question Create(string statement, List<Option>? options, int? quizId, int choice)
+		public override Question Create(params object[] parameters)
 		{
-			ArgumentNullException.ThrowIfNull(statement, "Statement should not be null.");
+			ArgumentNullException.ThrowIfNull(parameters[0] as string, "Statement should not be null.");
 
-			switch (choice)
+			switch (parameters[3])
 			{
 				case 1:
 
 					FourOptionQuestion fourOptionQuestion = new()
 					{
-						Statement = statement,
-						OptionsList = options,
-						QuizId = quizId
+						Statement = parameters[0] as string,
+						OptionsList = (List<Option>?)parameters[1],
+						QuizId = parameters[2] as int?
 					};
 
-					_questionRepository.Add(fourOptionQuestion);
+					_repository.Add(fourOptionQuestion);
 
 					return fourOptionQuestion;
 
@@ -52,12 +48,12 @@ namespace AdoNetExamProject.Services.Implements
 
 					MultipleChoiceQuestion multipleChoiceQuestion = new()
 					{
-						Statement = statement,
-						OptionsList = options,
-						QuizId = quizId
+						Statement = parameters[0] as string,
+						OptionsList = (List<Option>?)parameters[1],
+						QuizId = parameters[2] as int?
 					};
 
-					_questionRepository.Add(multipleChoiceQuestion);
+					_repository.Add(multipleChoiceQuestion);
 
 					return multipleChoiceQuestion;
 
@@ -65,12 +61,12 @@ namespace AdoNetExamProject.Services.Implements
 
 					TrueFalseQuestion trueFalseQuestion = new()
 					{
-						Statement = statement,
-						OptionsList = options,
-						QuizId = quizId
+						Statement = parameters[0] as string,
+						OptionsList = (List<Option>?)parameters[1],
+						QuizId = parameters[2] as int?
 					};
 
-					_questionRepository.Add(trueFalseQuestion);
+					_repository.Add(trueFalseQuestion);
 
 					return trueFalseQuestion;
 
@@ -78,12 +74,12 @@ namespace AdoNetExamProject.Services.Implements
 
 					FillTheGap fillTheGap = new()
 					{
-						Statement = statement,
-						OptionsList = options,
-						QuizId = quizId
+						Statement = parameters[0] as string,
+						OptionsList = (List<Option>?)parameters[1],
+						QuizId = parameters[2] as int?
 					};
 
-					_questionRepository.Add(fillTheGap);
+					_repository.Add(fillTheGap);
 
 					return fillTheGap;
 
@@ -97,29 +93,30 @@ namespace AdoNetExamProject.Services.Implements
 		}
 
 
-		public Question Update(int id, string? statement, int? quizId)
+		public override Question Update(params object[] parameters)
 		{
-			var newQuestion = _questionRepository.GetById(id);
+			var newQuestion = _repository.GetById((int)parameters[0]);
 
 			ArgumentNullException.ThrowIfNull(newQuestion, "\nQuestion not found");
 
-			if (statement is not null) newQuestion.Statement = statement;
-			if (quizId is not null) newQuestion.QuizId = quizId;
+			if ((string?)parameters[1] is not null) newQuestion.Statement = (string?)parameters[1];
+			if ((List<Option>?)parameters[2] is not null) newQuestion.OptionsList = (List<Option>?)parameters[2];
+			if (parameters[3] as int? is not null) newQuestion.QuizId = parameters[2] as int?;
 
-			_questionRepository.Update(newQuestion);
+			_repository.Update(newQuestion);
 
 			return newQuestion;
 		}
 
 
-		public void DeleteById(int id)
+		public override void DeleteById(int id)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id);
-			_questionRepository.DeleteById(id);
+			_repository.DeleteById(id);
 		}
 
 
-		public void DeleteAll() => _questionRepository.DeleteAll();
+		public override void DeleteAll() => _repository.DeleteAll();
 
 	}
 }

@@ -9,82 +9,78 @@ using System.Threading.Tasks;
 
 namespace AdoNetExamProject.Services.Implements
 {
-	public class UserQuizService : IUserQuizService
+	public class UserQuizService : Service<UserQuiz>
 	{
-		private readonly UserQuizRepository _userQuizRepository;
-
-		public UserQuizService(UserQuizRepository userQuizRepository)
+		public UserQuizService(Repository<UserQuiz> repository) : base(repository)
 		{
-			_userQuizRepository = userQuizRepository;
 		}
 
+		public override IEnumerable<UserQuiz> GetAll() => _repository.GetAll().ToList();
 
-		public IEnumerable<UserQuiz> GetAll() => _userQuizRepository.GetAll().ToList();
 
-
-		public UserQuiz GetById(int id)
+		public override UserQuiz GetById(int id)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id);
-			return _userQuizRepository.GetById(id);
+			return _repository.GetById(id);
 		}
 
 
-		public UserQuiz Create(int userId, int quizId, int rank, double succesRate, int correctAnswerCount, int passedAnswerCount, int wrongAnswerCount)
+		public override UserQuiz Create(params object[] parameters)
 		{
-			ArgumentNullException.ThrowIfNull(userId, "UserId Should not be Null.");
-			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(userId, "UserId should not be Negative or Zero.");
+			ArgumentNullException.ThrowIfNull((int)parameters[0], "UserId Should not be Null.");
+			ArgumentOutOfRangeException.ThrowIfNegativeOrZero((int)parameters[0], "UserId should not be Negative or Zero.");
 
-			ArgumentNullException.ThrowIfNull(userId, "QuizId Should not be Null.");
-			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(quizId, "QuizId should not be Negative or Zero.");
+			ArgumentNullException.ThrowIfNull((int)parameters[1], "QuizId Should not be Null.");
+			ArgumentOutOfRangeException.ThrowIfNegativeOrZero((int)parameters[1], "QuizId should not be Negative or Zero.");
 
-			if (correctAnswerCount < 0 || correctAnswerCount > 20) throw new ArgumentOutOfRangeException("Correct Answers Count should be between 0 and 20.");
-			if (passedAnswerCount < 0 || passedAnswerCount > 20) throw new ArgumentOutOfRangeException("Passed Answers Count should be between 0 and 20.");
-			if (wrongAnswerCount < 0 || wrongAnswerCount > 20) throw new ArgumentOutOfRangeException("Wrong Answers Count should be between 0 and 20.");
+			if ((int)parameters[4] < 0 || (int)parameters[4] > 20) throw new ArgumentOutOfRangeException("Correct Answers Count should be between 0 and 20.");
+			if ((int)parameters[5] < 0 || (int)parameters[5] > 20) throw new ArgumentOutOfRangeException("Passed Answers Count should be between 0 and 20.");
+			if ((int)parameters[6] < 0 || (int)parameters[6] > 20) throw new ArgumentOutOfRangeException("Wrong Answers Count should be between 0 and 20.");
 
 			UserQuiz userQuiz = new()
 			{
-				UserId = userId,
-				QuizId = quizId,
-				Rank = rank,
-				SuccessRate = succesRate,
-				CorrectAnswerCount = correctAnswerCount,
-				PassedAnswerCount = passedAnswerCount,
-				WrongAnswerCount = wrongAnswerCount
+				UserId = (int)parameters[0],
+				QuizId = (int)parameters[1],
+				Rank = (int)parameters[2],
+				SuccessRate = (double)parameters[3],
+				CorrectAnswerCount = (int)parameters[4],
+				PassedAnswerCount = (int)parameters[5],
+				WrongAnswerCount = (int)parameters[6]
 			};
 
-			_userQuizRepository.Add(userQuiz);
+			_repository.Add(userQuiz);
 
 			return userQuiz;
 		}
 
 
-		public UserQuiz Update(int id, int correctAnswerCount, int passedAnswerCount, int wrongAnswerCount, double succesRate, int userId = 0, int quizId = 0, int rank = 0)
+		public override UserQuiz Update(params object[] parameters)
 		{
-			var newUserQuiz = _userQuizRepository.GetById(id);
+			var newUserQuiz = _repository.GetById((int)parameters[0]);
 
-			if (userId != 0) newUserQuiz.UserId = userId;
-			if (quizId != 0) newUserQuiz.QuizId = quizId;
-			if (rank != 0) newUserQuiz.Rank = rank;
-			newUserQuiz.CorrectAnswerCount = correctAnswerCount;
-			newUserQuiz.PassedAnswerCount = passedAnswerCount;
-			newUserQuiz.WrongAnswerCount = wrongAnswerCount;
-			newUserQuiz.SuccessRate = succesRate;
+			if ((int)parameters[5] != 0) newUserQuiz.UserId = (int)parameters[5];
+			if ((int)parameters[6] != 0) newUserQuiz.QuizId = (int)parameters[6];
+			if ((int)parameters[7] != 0) newUserQuiz.Rank = (int)parameters[7];
+			newUserQuiz.CorrectAnswerCount = (int)parameters[1];
+			newUserQuiz.PassedAnswerCount = (int)parameters[2];
+			newUserQuiz.WrongAnswerCount = (int)parameters[3];
+			newUserQuiz.SuccessRate = (double)parameters[4];
 
 
-			_userQuizRepository.Update(newUserQuiz);
+			_repository.Update(newUserQuiz);
 
 			return newUserQuiz;
 		}
 
 
-		public void DeleteById(int id)
+		public override void DeleteById(int id)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id);
-			_userQuizRepository.DeleteById(id);
+			_repository.DeleteById(id);
 		}
 
 
-		public void DeleteAll() => _userQuizRepository.DeleteAll();
+		public override void DeleteAll() => _repository.DeleteAll();
 
 	}
 }

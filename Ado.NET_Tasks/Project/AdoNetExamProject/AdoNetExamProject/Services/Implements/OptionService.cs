@@ -9,65 +9,63 @@ using System.Threading.Tasks;
 
 namespace AdoNetExamProject.Services.Implements
 {
-	public class OptionService : IOptionService
+	public class OptionService : Service<Option>
 	{
-		private readonly OptionRepository _optionRepository;
-
-		public OptionService(OptionRepository optionRepository)
+		public OptionService(Repository<Option> repository) : base(repository)
 		{
-			_optionRepository = optionRepository;
 		}
 
+		public override IEnumerable<Option> GetAll() => _repository.GetAll().ToList();
 
-		public IEnumerable<Option> GetAll() => _optionRepository.GetAll().ToList();
 
-
-		public Option GetById(int id)
+		public override Option GetById(int id)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id);
-			return _optionRepository.GetById(id);
+			return _repository.GetById(id);
 		}
 
 
-		public Option Create(string text, bool? isCorrect, int? questionId)
+		public override Option Create(params object[] parameters)
 		{
-			ArgumentNullException.ThrowIfNullOrEmpty(text, "Text should not be null.");
+
+
+			ArgumentNullException.ThrowIfNull(parameters[0] as string, "Text should not be null.");
 
 			Option option = new()
 			{
-				Text = text,
-				IsCorrect = isCorrect,
-				QuestionId = questionId
+				Text = parameters[0] as string,
+				IsCorrect = parameters[1] as bool?,
+				QuestionId = parameters[2] as int?
 			};
 
-			_optionRepository.Add(option);
+			_repository.Add(option);
 
 			return option;
 		}
 
 
-		public Option Update(int id, string? text, bool? isCorrect, int? questionId)
+		public override Option Update(params object[] parameters)
 		{
-			var newOption = _optionRepository.GetById(id);
+			var newOption = _repository.GetById((int)parameters[0]);
 
-			if (text is not null) newOption.Text = text;
-			if (isCorrect is not null) newOption.IsCorrect = isCorrect;
-			if (questionId is not null) newOption.QuestionId = questionId;
+			if ((string?)parameters[1] is not null) newOption.Text = (string?)parameters[1];
+			if (parameters[2] as bool? is not null) newOption.IsCorrect = parameters[2] as bool?;
+			if (parameters[3] as int? is not null) newOption.QuestionId = parameters[3] as int?;
 
-			_optionRepository.Update(newOption);
+			_repository.Update(newOption);
 
 			return newOption;
 		}
 
 
-		public void DeleteById(int id)
+		public override void DeleteById(int id)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id);
-			_optionRepository.DeleteById(id);
+			_repository.DeleteById(id);
 		}
 
 
-		public void DeleteAll() => _optionRepository.DeleteAll();
+		public override void DeleteAll() => _repository.DeleteAll();
 
 	}
 

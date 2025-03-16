@@ -6,7 +6,7 @@ public abstract class Question :IQuestion
 {
 	public int Id { get; set; }
 	public string Statement { get; set; }
-	public List<Option> OptionsList { get; set; } = [];
+	public List<Option>? OptionsList { get; set; } = [];
 
 	[NotMapped]
 	public virtual Dictionary<string, Option> OptionsDic { get; set; }

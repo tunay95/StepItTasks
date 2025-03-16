@@ -1,6 +1,6 @@
 ﻿using AdoNetExamProject.Entities;
-using AdoNetExamProject.Interfaces;
 using AdoNetExamProject.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,34 +9,36 @@ using System.Threading.Tasks;
 
 namespace AdoNetExamProject.Repositories.Implements
 {
-	public class QuizRepository : IRepository<Quiz>
+	public class Repository<T> : IRepository<T> where T : class
 	{
 		private readonly AppDbContext _dbContext;
+		private readonly DbSet<T> _dbSet;
 
-		public QuizRepository(AppDbContext dbContext)
+		public Repository(AppDbContext dbContext)
 		{
 			_dbContext = dbContext;
+			_dbSet = _dbContext.Set<T>();
 		}
 
 
-		public IEnumerable<Quiz> GetAll() => _dbContext.Quizzes.Where(q => q != null);
+		public IEnumerable<T> GetAll() => _dbSet.Where(q => q != null);
 
 
-		public Quiz GetById(int id) => _dbContext.Quizzes.Find(id);
+		public T GetById(int id) => _dbSet.Find(id);
 
 
-		public void Add(Quiz quiz)
+		public void Add(T entity)
 		{
-			ArgumentNullException.ThrowIfNull(quiz, "Quiz Should not be Null !!");
-			_dbContext.Quizzes.Add(quiz);
+			ArgumentNullException.ThrowIfNull(entity, "Quiz Should not be Null !!");
+			_dbSet.Add(entity);
 			_dbContext.SaveChanges();
 		}
 
 
-		public void Update(Quiz quiz)
+		public void Update(T entity)
 		{
-			ArgumentNullException.ThrowIfNull(quiz, "Quiz should not be Null");
-			_dbContext.Quizzes.Update(quiz);
+			ArgumentNullException.ThrowIfNull(entity, "Quiz should not be Null");
+			_dbSet.Update(entity);
 			_dbContext.SaveChanges();
 		}
 
@@ -44,12 +46,12 @@ namespace AdoNetExamProject.Repositories.Implements
 		public void DeleteById(int id)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id, "Id should not be Zero or Negative !!");
-			var deletedQuiz = _dbContext.Quizzes.Find(id);
-			_dbContext.Quizzes.Remove(deletedQuiz);
+			var deletedQuiz = _dbSet.Find(id);
+			_dbSet.Remove(deletedQuiz);
 			_dbContext.SaveChanges();
 		}
-		
-		
+
+
 		public void DeleteAll()
 		{
 			var deletedQuizzes = _dbContext.Quizzes.ToList();

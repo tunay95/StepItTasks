@@ -9,74 +9,73 @@ using System.Threading.Tasks;
 
 namespace AdoNetExamProject.Services.Implements
 {
-	public class UserService : IUserService
+	public class UserService : Service<User>
 	{
-		private readonly UserRepository _userRepository;
-
-		public UserService(UserRepository userRepository)
+		public UserService(Repository<User> repository) : base(repository)
 		{
-			_userRepository = userRepository;
 		}
 
+		public override IEnumerable<User> GetAll() => _repository.GetAll().ToList();
 
-		public IEnumerable<User> GetAll() => _userRepository.GetAll().ToList();
 
-
-		public User GetById(int id)
+		public override User GetById(int id)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id);
-			return _userRepository.GetById(id);
+			return _repository.GetById(id);
 		}
 
 
-		public User Create(string firstName, string lastName, string username, string password, DateTime? birthDate, UserRole? userRole)
+		public override User Create(params object[] parameters)
 		{
-			ArgumentNullException.ThrowIfNull(firstName, "FirstName should not be Null.");
-			ArgumentNullException.ThrowIfNull(lastName, "LastName should not be Null.");
-			ArgumentNullException.ThrowIfNull(username, "Username should not be Null.");
-			ArgumentNullException.ThrowIfNull(password, "Password should not be Null.");
+			ArgumentNullException.ThrowIfNull(parameters[0] as string, "FirstName should not be Null.");
+			ArgumentNullException.ThrowIfNull(parameters[1] as string, "LastName should not be Null.");
+			ArgumentNullException.ThrowIfNull(parameters[2] as string, "Username should not be Null.");
+			ArgumentNullException.ThrowIfNull(parameters[3] as string, "Password should not be Null.");
 
 			User user = new User()
 			{
-				FirstName = firstName,
-				LastName = lastName,
-				Username = username,
-				Password = password,
-				BirthDate = birthDate,
-				UserRole = userRole
+				FirstName = parameters[0] as string,
+				LastName = parameters[1] as string,
+				Username = parameters[2] as string,
+				Password = parameters[3] as string,
+				BirthDate = parameters[4] as DateTime?,
+				UserRole = parameters[5] as UserRole?
 			};
 
-			_userRepository.Add(user);
+			_repository.Add(user);
 
 			return user;
 		}
 
 
-		public User Update(int id, string? firstName, string? lastName, string? username, string? password, DateTime? birthDate, UserRole? userRole)
+		public override User Update(params object[] parameters)
 		{
 
-			var newUser = _userRepository.GetById(id);
+			var newUser = _repository.GetById((int)parameters[0]);
 
 			ArgumentNullException.ThrowIfNull(newUser, "\nUser not found");
-			if (firstName is not null) newUser.FirstName = firstName;
-			if (lastName is not null) newUser.LastName = lastName;
-			if (username is not null) newUser.Username = username;
-			if (password is not null) newUser.Password = password;
+			if ((string?)parameters[1] is not null) newUser.FirstName = (string?)parameters[1];
+			if ((string?)parameters[2] is not null) newUser.LastName = (string?)parameters[2];
+			if ((string?)parameters[3] is not null) newUser.Username = (string?)parameters[3];
+			if ((string?)parameters[4] is not null) newUser.Password = (string?)parameters[4];
 
-			_userRepository.Update(newUser);
+			_repository.Update(newUser);
 
 			return newUser;
 		}
 
 
-		public void DeleteById(int id)
+		public override void DeleteById(int id)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id);
-			_userRepository.DeleteById(id);
+			_repository.DeleteById(id);
 		}
 
 
-		public void DeleteAll() => _userRepository.DeleteAll();
+		public override void DeleteAll() => _repository.DeleteAll();
+
+
+		public  bool Login(string username, string password, UserRole? userRole = UserRole.User) => _repository.GetAll().Any(u => u.Username == username && u.Password == password && u.UserRole == userRole);
 
 	}
 }

@@ -10,6 +10,6 @@ namespace AdoNetExamProject.Entities
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
-		public List<Quiz> Quizzes { get; set; } = [];
+		public List<Quiz>? Quizzes { get; set; } = [];
 	}
 }

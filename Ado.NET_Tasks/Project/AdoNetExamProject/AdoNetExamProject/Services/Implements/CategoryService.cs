@@ -9,65 +9,61 @@ using System.Threading.Tasks;
 
 namespace AdoNetExamProject.Services.Implements
 {
-	public class CategoryService : ICategoryService
+	public class CategoryService : Service<Category>
 	{
-		private readonly CategoryRepository _categoryRepository;
-
-		public CategoryService(CategoryRepository categoryRepository)
+		public CategoryService(Repository<Category> repository) : base(repository)
 		{
-			_categoryRepository = categoryRepository;
 		}
 
+		public override IEnumerable<Category> GetAll() => _repository.GetAll().ToList();
 
-		public IEnumerable<Category> GetAll() => _categoryRepository.GetAll().ToList();
 
-
-		public Category GetById(int id)
+		public override Category GetById(int id)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id);
-			return _categoryRepository.GetById(id);
+			return _repository.GetById(id);
 		}
 
 
-		public Category Create(string name, List<Quiz>? quizzes)
+		public override Category Create(params object[] parameters)
 		{
-			ArgumentNullException.ThrowIfNull(name, "Category Name should not be null.");
+			ArgumentNullException.ThrowIfNull(parameters[0] as string, "Category Name should not be null.");
 
 			Category category = new()
 			{
-				Name = name,
-				Quizzes = quizzes
+				Name = parameters[0] as string,
+				Quizzes = parameters[2] as List<Quiz>,
 			};
 
-			_categoryRepository.Add(category);
+			_repository.Add(category);
 
 			return category;
 		}
 
 
-		public Category Update(int id, string? name, List<Quiz>? quizzes)
+		public override Category Update(params object[] parameters)
 		{
-			var newCategory = _categoryRepository.GetById(id);
+			var newCategory = _repository.GetById((int)parameters[0]);
 
 			ArgumentNullException.ThrowIfNull(newCategory, "\nCategory not found");
 
-			if (name is not null) newCategory.Name = name;
-			if (quizzes is not null) newCategory.Quizzes = quizzes;
+			if (parameters[1] as string is not null) newCategory.Name = parameters[1] as string;
+			if ((List<Quiz>?)parameters[2] is not null) newCategory.Quizzes = (List<Quiz>?)parameters[2];
 
-			_categoryRepository.Update(newCategory);
+			_repository.Update(newCategory);
 
 			return newCategory;
 		}
 
 
-		public void DeleteById(int id)
+		public override void DeleteById(int id)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id);
-			_categoryRepository.DeleteById(id);
+			_repository.DeleteById(id);
 		}
 
 
-		public void DeleteAll() => _categoryRepository.DeleteAll();
+		public override void DeleteAll() => _repository.DeleteAll();
 
 	}
 }

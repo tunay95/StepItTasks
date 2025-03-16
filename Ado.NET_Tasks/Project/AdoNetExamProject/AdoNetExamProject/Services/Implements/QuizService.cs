@@ -9,66 +9,61 @@ using System.Threading.Tasks;
 
 namespace AdoNetExamProject.Services.Implements
 {
-	public class QuizService : IQuizService
+	public class QuizService : Service<Quiz>
 	{
-		private readonly QuizRepository _quizRepository;
-
-		public QuizService(QuizRepository quizRepository)
+		public QuizService(Repository<Quiz> repository) : base(repository)
 		{
-			_quizRepository = quizRepository;
 		}
 
+		public override IEnumerable<Quiz> GetAll() => _repository.GetAll().ToList();
 
-		public IEnumerable<Quiz> GetAll() => _quizRepository.GetAll().ToList();
 
-
-		public Quiz GetById(int id)
+		public override Quiz GetById(int id)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id);
-			return _quizRepository.GetById(id);
+			return _repository.GetById(id);
 		}
 
 
-		public Quiz Create(string quizName, List<Question>? questions, int? categoryId)
+		public override Quiz Create(params object[] parameters)
 		{
-			ArgumentNullException.ThrowIfNull
-				
-				(quizName, "Text should not be null.");
+
+			ArgumentNullException.ThrowIfNull(parameters[0] as string, "Text should not be null.");
 
 			Quiz quiz = new()
 			{
-				QuizName = quizName,
-				Questions = questions,
-				CategoryId = categoryId
+				QuizName = parameters[0] as string,
+				Questions = parameters[1] as List<Question>,
+				CategoryId = parameters[2] as int?
 			};
 
-			_quizRepository.Add(quiz);
+			_repository.Add(quiz);
 
 			return quiz;
 		}
 
 
-		public Quiz Update(int id, string? quizName, int? categoryId)
+		public override Quiz Update(params object[] parameters)
 		{
-			var newQuiz = _quizRepository.GetById(id);
+			var newQuiz = _repository.GetById((int)parameters[0]);
 
-			if (quizName is not null) newQuiz.QuizName = quizName;
-			if (categoryId is not null) newQuiz.CategoryId = categoryId;
+			if ((string?)parameters[1] is not null) newQuiz.QuizName = (string?)parameters[1];
+			if (parameters[2] as int? is not null) newQuiz.CategoryId = parameters[2] as int?;
 
-			_quizRepository.Update(newQuiz);
+			_repository.Update(newQuiz);
 
 			return newQuiz;
 		}
 
 
-		public void DeleteById(int id)
+		public override void DeleteById(int id)
 		{
 			ArgumentOutOfRangeException.ThrowIfNegativeOrZero(id);
-			_quizRepository.DeleteById(id);
+			_repository.DeleteById(id);
 		}
 
 
-		public void DeleteAll() => _quizRepository.DeleteAll();
+		public override void DeleteAll() => _repository.DeleteAll();
 
 	}
 }

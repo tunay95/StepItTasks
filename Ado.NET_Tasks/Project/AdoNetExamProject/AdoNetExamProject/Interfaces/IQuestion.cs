@@ -9,6 +9,6 @@ namespace AdoNetExamProject.Interfaces
 	public interface IQuestion
 	{
 		abstract void DisplayQuestion(); 
-		abstract bool? CheckAnswer(string userAnswer); 
+		abstract bool CheckAnswer(string userAnswer); 
 	}
 }

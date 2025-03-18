@@ -378,8 +378,9 @@ Your Choice: ");
 
 			if (userService2.Login(usernameUserLogin, passwordUserLogin, userRole))
 			{
+				var user = dbContext.Users.Where(u => u.Username == usernameUserLogin).FirstOrDefault();
 				if (userRole == UserRole.Admin) AdminMenu(usernameUserLogin);
-				else UserMenu(usernameUserLogin);
+				else UserMenu(user);
 			}
 
 			else
@@ -427,10 +428,11 @@ Your Choice: ");
 
 static void AdminMenu(string username)
 {
+	Console.Clear();
 
 	AppDbContext dbContext2 = new AppDbContext();
 
-	Console.WriteLine(@$"-------------- * Account - {username} * --------------
+	Console.Write(@$"-------------- * Account - {username} * --------------
 
 Choose the entity on which you will implement CRUD operations:
 
@@ -447,14 +449,16 @@ Choose the entity on which you will implement CRUD operations:
 Your Choice: ");
 
 
+
 	int choice;
 	int.TryParse(Console.ReadLine(), out choice);
 
+	if (choice == 7) Menu();
 
 	Console.Clear();
 
 
-	Console.WriteLine(@$"-------------- * Account - {username} * --------------
+	Console.Write(@$"-------------- * Account - {username} * --------------
 
 Choose the entity on which you will implement CRUD operations:
 
@@ -481,7 +485,7 @@ Your Choice: ");
 		case 1:         // Category	
 
 			Repository<Category> repositoryCategory = new(dbContext2);
-			Service<Category> serviceCategory = new Service<Category>(repositoryCategory);
+			Service<Category> serviceCategory = new CategoryService(repositoryCategory);
 
 			switch (choice2)
 			{
@@ -558,6 +562,7 @@ Your Choice: ");
 
 					}
 
+					Console.WriteLine("Category has been updated.");
 					break;
 
 				case 5:
@@ -586,7 +591,6 @@ Your Choice: ");
 
 			}
 
-			Console.WriteLine("\nOption updated successfully.");
 
 			break;
 
@@ -594,14 +598,143 @@ Your Choice: ");
 		case 2:         // Quiz
 
 			Repository<Quiz> repositoryQuiz = new(dbContext2);
-			Service<Quiz> serviceQuiz = new(repositoryQuiz);
+			Service<Quiz> serviceQuiz = new QuizService(repositoryQuiz);
+
+			switch (choice2)
+			{
+				case 1:
+
+					var quizzes = serviceQuiz.GetAll();
+
+					foreach (var quiz in quizzes)
+					{
+						Console.WriteLine($"Id: {quiz.Id} -> {quiz.QuizName} | CategoryId: {quiz.CategoryId}");
+					}
+					break;
+
+				case 2:
+
+					Console.Write("\nEnter Id: ");
+					int idQuiz;
+					int.TryParse(Console.ReadLine(), out idQuiz);
+
+					var quiz2 = serviceQuiz.GetById(idQuiz);
+
+					Console.WriteLine($"Id: {quiz2.Id} -> {quiz2.QuizName} | QuizId: {quiz2.CategoryId}");
+
+					break;
+
+				case 3:
+
+					Console.Write("QuizName: ");
+					string quizName = Console.ReadLine();
+
+
+					Console.Write("CategoryId: ");
+					int categoryId;
+					int.TryParse(Console.ReadLine(), out categoryId);
+
+					serviceQuiz.Create(quizName, categoryId);
+
+					Console.WriteLine("\nNew Category Created.");
+
+					break;
+
+				case 4:
+
+					Console.Write("\nEnter Id: ");
+					int idQuiz2;
+					int.TryParse(Console.ReadLine(), out idQuiz2);
+
+
+					Console.Write(@"
+				Which Property do you want to update?
+
+				1. QuizName
+				2. CategoryId
+				3. Both
+
+				Your Answer: ");
+
+					int choiceQuiz;
+					int.TryParse(Console.ReadLine(), out choiceQuiz);
+
+
+					switch (choiceQuiz)
+					{
+						case 1:
+
+							Console.Write("\nQuizName: ");
+							string quizName2 = Console.ReadLine();
+
+							var updatedQuestion = serviceQuiz.Update(idQuiz2, quizName2, null);
+
+							break;
+
+
+						case 2:
+
+							Console.Write("\nQuizId: ");
+							int categoryId2;
+							int.TryParse(Console.ReadLine(), out categoryId2);
+
+							var updatedOption3 = serviceQuiz.Update(idQuiz2, null, categoryId2);
+
+							break;
+
+						case 3:
+
+							Console.Write("QuizName: ");
+							string quizName3 = Console.ReadLine();
+
+
+							Console.Write("CategoryId: ");
+							int categoryId3;
+							int.TryParse(Console.ReadLine(), out categoryId3);
+
+							var updatedOption4 = serviceQuiz.Update(idQuiz2, quizName3, categoryId3);
+
+							break;
+
+						default:
+
+							Console.WriteLine("\nEnter The Correct Choice.");
+
+							break;
+
+					}
+
+					Console.WriteLine("\nQuiz has been updated.");
+					break;
+
+				case 5:
+
+					Console.Write("\nEnter Id: ");
+					int idDeleteqQuiz;
+					int.TryParse(Console.ReadLine(), out idDeleteqQuiz);
+
+					serviceQuiz.DeleteById(idDeleteqQuiz);
+
+					Console.WriteLine("\nQuiz has been deleted.");
+
+					break;
+
+				case 6:
+
+					serviceQuiz.DeleteAll();
+					break;
+
+				default:
+
+					break;
+			}
 
 			break;
 
 
 		case 3:         // Question
 
-			Repository<Question> repositoryQuestion = new (dbContext2);
+			Repository<Question> repositoryQuestion = new(dbContext2);
 			Service<Question> serviceQuestion = new QuestionService(repositoryQuestion);
 
 			switch (choice2)
@@ -711,6 +844,7 @@ Your Choice: ");
 
 					}
 
+					Console.WriteLine("\nQuestion updated successfully.");
 					break;
 
 				case 5:
@@ -737,7 +871,6 @@ Your Choice: ");
 
 			}
 
-			Console.WriteLine("\nOption updated successfully.");
 
 			break;
 
@@ -745,7 +878,7 @@ Your Choice: ");
 		case 4:         // Option
 
 			Repository<Option> repositoryOption = new(dbContext2);
-			Service<Option> serviceOption = new(repositoryOption);
+			Service<Option> serviceOption = new OptionService(repositoryOption);
 
 			switch (choice2)
 			{
@@ -757,6 +890,8 @@ Your Choice: ");
 					{
 						Console.WriteLine($"{opt.Id}  {opt.Text}  {opt.IsCorrect}  {opt.QuestionId}");
 					}
+
+					Console.ReadKey();
 					break;
 
 				case 2:
@@ -780,9 +915,21 @@ Your Choice: ");
 					bool isCorrect;
 					bool.TryParse(Console.ReadLine(), out isCorrect);
 
-					Console.Write("QuestionId: ");
-					int questionId;
-					int.TryParse(Console.ReadLine(), out questionId);
+
+					Console.WriteLine("\n\nNo   | Id         | Statement        ");
+					Console.WriteLine("--------------------------------------");
+
+					var questionForOptions = dbContext2.Questions.ToList();
+
+					for (int i = 0; i < questionForOptions.Count; i++)
+					{
+						Console.WriteLine($"{(i + 1),-4} | {questionForOptions[i].Id,-10} | {questionForOptions[i].Statement.PadRight(12).Substring(0, 12)}..");
+					}
+
+					Console.Write("\nQuestionId: ");
+					string? stringQuestionId = Console.ReadLine();
+					int? questionId = null;
+					if (stringQuestionId != "") questionId = int.Parse(stringQuestionId);
 
 					serviceOption.Create(text, isCorrect, questionId);
 
@@ -798,20 +945,18 @@ Your Choice: ");
 
 
 					Console.Write(@"
-				Which Property do you want to update?
-
-				1. Text
-				2. Accuracy
-				3. Question Id
-				4. All
-
-				Your Answer: ");
+Which Property do you want to update
+1. Text
+2. Accuracy
+3. Question Id
+4. All
+Your Answer: ");
 
 					int choiceOption;
 					int.TryParse(Console.ReadLine(), out choiceOption);
 
 
-					switch (choice)
+					switch (choiceOption)
 					{
 						case 1:
 
@@ -824,15 +969,27 @@ Your Choice: ");
 
 						case 2:
 
-							Console.Write("\nIsCorrect: ");
-							bool isCorrectOption;
-							bool.TryParse(Console.ReadLine(), out isCorrectOption);
+							bool? isCorrectOption;
+							if ((bool)dbContext2.Options.Find(idOption).IsCorrect) isCorrectOption = false;
+							else isCorrectOption = true;
+
 
 							var updatedOption2 = serviceOption.Update(idOption, null, isCorrectOption, null);
 
 							break;
 
 						case 3:
+
+							Console.WriteLine("\n\nNo   | Id         | Statement        ");
+							Console.WriteLine("--------------------------------------");
+
+							var questionForOptions2 = dbContext2.Questions.ToList();
+
+							for (int i = 0; i < questionForOptions2.Count; i++)
+							{
+								Console.WriteLine($"{(i + 1),-4} | {questionForOptions2[i].Id,-10} | {questionForOptions2[i].Statement.PadRight(12).Substring(0, 12)}..");
+							}
+
 
 							Console.Write("\nQuestionId: ");
 							int questionIdOption;
@@ -872,6 +1029,13 @@ Your Choice: ");
 
 				case 5:
 
+					Console.WriteLine("\n\nNo        Id                Text                IsCorrect                QuestionId     \n-----------------------------------------------------------------------------------------------------------------\n");
+					var optionsForDelete = dbContext2.Options.ToList();
+					for (int i = 0; i < optionsForDelete.Count; i++)
+					{
+						Console.WriteLine($"{i + 1}.        {optionsForDelete[i].Id}                {optionsForDelete[i].Text}                {optionsForDelete[i].IsCorrect}                {optionsForDelete[i].QuestionId}  ");
+					}
+
 					Console.Write("\nEnter Id: ");
 					int idDeleteOption;
 					int.TryParse(Console.ReadLine(), out idDeleteOption);
@@ -901,7 +1065,7 @@ Your Choice: ");
 		case 5:     // UserQuiz
 
 			Repository<UserQuiz> repositoryUserQuiz = new(dbContext2);
-			Service<UserQuiz> serviceUserQuiz = new(repositoryUserQuiz);
+			Service<UserQuiz> serviceUserQuiz = new UserQuizService(repositoryUserQuiz);
 
 			switch (choice2)
 			{
@@ -1095,7 +1259,7 @@ Your Choice: ");
 							int passedAnswerCount3;
 							int.TryParse(Console.ReadLine(), out passedAnswerCount3);
 
-							serviceUserQuiz.Create(idResult,userId3, quizId3, rank3, successRate3, correctAnswerCount3, wrongAnswerCount3, passedAnswerCount3);
+							serviceUserQuiz.Create(idResult, userId3, quizId3, rank3, successRate3, correctAnswerCount3, wrongAnswerCount3, passedAnswerCount3);
 
 							break;
 
@@ -1106,8 +1270,7 @@ Your Choice: ");
 							break;
 					}
 
-					Console.WriteLine("\nOption updated successfully.");
-
+					Console.WriteLine("\nQuiz REsult updated successfully.");
 					break;
 
 				case 5:
@@ -1141,20 +1304,217 @@ Your Choice: ");
 		case 6:     // User
 
 			Repository<User> repositoryUser = new(dbContext2);
-			Service<User> serviceUser = new(repositoryUser);
+			Service<User> serviceUser = new UserService(repositoryUser);
 
+			switch (choice2)
+			{
+				case 1:
+
+					var users = serviceUser.GetAll();
+
+					foreach (var user in users)
+					{
+						Console.WriteLine($"Id: {user.Id} -> {user.FirstName}  {user.LastName}  {user.Username}  {user.UserRole}");
+					}
+					break;
+
+				case 2:
+
+					Console.Write("\nEnter Id: ");
+					int idUser;
+					int.TryParse(Console.ReadLine(), out idUser);
+
+					var user2 = serviceUser.GetById(idUser);
+
+					Console.WriteLine($"Id: {user2.Id} -> {user2.FirstName}  {user2.LastName}  {user2.Username}  {user2.UserRole}");
+
+					break;
+
+				case 3:
+
+					Console.Write("FirstName: ");
+					string firstNameUser = Console.ReadLine();
+
+					Console.Write("LastName: ");
+					string lastNameUser = Console.ReadLine();
+
+					Console.Write("UserName: ");
+					string userName2 = Console.ReadLine();
+
+					Console.Write("Password: ");
+					string passwordUser = Console.ReadLine();
+
+					Console.Write("BirthDate: ");
+					string birthDateUser = Console.ReadLine();
+
+					Console.WriteLine("User Role:\n\n1. User\n2. Admin\n\nYour Choice: ");
+					int userRoleChoice;
+					int.TryParse(Console.ReadLine(), out userRoleChoice);
+					UserRole? userRole1 = null;
+
+					if (userRoleChoice == 2) userRole1 = UserRole.Admin;
+					else Console.WriteLine("\n\nEnter The Correct Choice.");
+
+					serviceUser.Create(firstNameUser, lastNameUser, userName2, passwordUser, birthDateUser, userRole1);
+
+					Console.WriteLine("\nNew User Created.");
+
+					break;
+
+				case 4:
+
+					Console.Write("\nEnter Id: ");
+					int idUser3;
+					int.TryParse(Console.ReadLine(), out idUser3);
+
+
+					Console.Write(@"
+				Which Property do you want to update?
+
+				1. FirstName
+				2. LastName
+				3. BirthDate
+				4. Password
+				5. UserRole
+				6. All
+
+				Your Answer: ");
+
+					int choiceQuestion;
+					int.TryParse(Console.ReadLine(), out choiceQuestion);
+
+
+					switch (choiceQuestion)
+					{
+						case 1:
+
+							Console.Write("\nFirstName: ");
+							string firstNameUpdate = Console.ReadLine();
+
+							var updatedUser = serviceUser.Update(idUser3, firstNameUpdate, null, null, null, null, null);
+
+							break;
+
+
+						case 2:
+
+							Console.Write("\nFirstName: ");
+							string lastNameUpdate = Console.ReadLine();
+
+							var updatedUser2 = serviceUser.Update(idUser3, null, lastNameUpdate, null, null, null, null);
+
+							break;
+
+						case 3:
+
+							Console.Write("\nUserName: ");
+							string userNameUpdate = Console.ReadLine();
+
+							var updatedOption3 = serviceUser.Update(idUser3, null, null, userNameUpdate, null, null, null);
+
+							break;
+
+						case 4:
+
+							Console.Write("\nPassword: ");
+							string passwordUpdate = Console.ReadLine();
+
+							var updatedOption4 = serviceUser.Update(idUser3, null, null, null, passwordUpdate, null, null, null);
+
+							break;
+
+						case 5:
+
+							Console.Write("\nDateTime: ");
+							DateTime dateTime;
+							DateTime.TryParse(Console.ReadLine(), out dateTime);
+
+							var updatedOption5 = serviceUser.Update(idUser3, null, null, dateTime);
+
+							break;
+
+						case 6:
+
+							var userRoleUpdated = serviceUser.GetById(idUser3);
+							if (userRoleUpdated.UserRole == UserRole.User) userRoleUpdated.UserRole = UserRole.Admin;
+							else userRoleUpdated.UserRole = UserRole.User;
+
+							break;
+
+						case 7:
+
+							Console.Write("FirstName: ");
+							string firstNameUser2 = Console.ReadLine();
+
+							Console.Write("LastName: ");
+							string lastNameUser2 = Console.ReadLine();
+
+							Console.Write("UserName: ");
+							string userName3 = Console.ReadLine();
+
+							Console.Write("Password: ");
+							string passwordUser2 = Console.ReadLine();
+
+							Console.Write("BirthDate: ");
+							string birthDateUser2 = Console.ReadLine();
+
+							var userRoleUpdated2 = serviceUser.GetById(idUser3);
+							if (userRoleUpdated2.UserRole == UserRole.User) userRoleUpdated2.UserRole = UserRole.Admin;
+							else userRoleUpdated2.UserRole = UserRole.User;
+
+							serviceUser.Create(firstNameUser2, lastNameUser2, userName3, passwordUser2, birthDateUser2, idUser3);
+
+							break;
+
+						default:
+
+							Console.WriteLine("\nEnter The Correct Choice.");
+
+							break;
+
+					}
+
+					Console.WriteLine("\nUser updated successfully.");
+					break;
+
+				case 5:
+
+					Console.Write("\nEnter Id: ");
+					int idDeleteUser;
+					int.TryParse(Console.ReadLine(), out idDeleteUser);
+
+					serviceUser.DeleteById(idDeleteUser);
+
+					Console.WriteLine("\nUser has been deleted.");
+
+					break;
+
+				case 6:
+
+					serviceUser.DeleteAll();
+					break;
+
+				default:
+
+					break;
+
+
+			}
 
 
 			break;
+
 
 		case 7:
 
 			Menu();
 			break;
 
+
 		case 8:
 
 			return;
+
 
 		default:
 
@@ -1162,17 +1522,27 @@ Your Choice: ");
 			break;
 	}
 
+	Thread.Sleep(5000);
 
+	AdminMenu(username);
 }
 
 
 
-static void UserMenu(string username)
+static void UserMenu(User user)
 {
+	Console.Clear();
 
-	Console.WriteLine(@"
+	AppDbContext dbContext = new AppDbContext();
+	Repository<UserQuiz> userQuizRepository = new(dbContext);
+	UserQuizService userQuizService = new UserQuizService(userQuizRepository);
+
+	Console.Write($@"-------------- * Account - {user.Username} * --------------
+
+Choose which operation to apply:
+
 1. Start Quiz
-2. Preious Results
+2. Previous Results
 3. Top 20
 4. Settings
 5. Log out
@@ -1182,15 +1552,89 @@ Your Choice: ");
 	int choice;
 	int.TryParse(Console.ReadLine(), out choice);
 
+
+	Console.Clear();
+
+	var categories = dbContext.Categories
+		.Include(c => c.Quizzes)
+		.ThenInclude(q => q.Questions)
+		.ThenInclude(qs => qs.OptionsList)
+		.ToList();
+
 	switch (choice)
 	{
 		case 1:
 
 
+			for (int i = 0; i < categories.Count; i++)
+			{
+				Console.WriteLine($"{i + 1}. {categories[i].Name}");
+			}
+
+			int choiceCategory;
+			int.TryParse(Console.ReadLine(), out choiceCategory);
+
+			Random random = new Random();
+
+
+			var quiz = categories[choiceCategory - 1].Quizzes[random.Next(categories[choiceCategory - 1].Quizzes.Count)];
+
+			UserQuiz userQuiz = userQuizService.StartQuiz(quiz, user.Id);
+
+			Thread.Sleep(2000);
+			Console.Clear();
+
+			//var rankedUserQuiz = dbContext.UserQuizzes
+			//	.FromSqlRaw(@"
+   //     SELECT *, 
+   //     RANK() OVER(PARTITION BY QuizId ORDER BY CorrectAnswerCount ASC) AS Rank 
+   //     FROM UserQuizzes")
+			//	.ToList();
+
+			//var userRank = rankedUserQuiz.Where(uq => uq.Id == userQuiz.Id).FirstOrDefault().Rank;
+
+			var quizName2 = dbContext.Quizzes.Find(userQuiz.QuizId).QuizName;
+
+			Console.WriteLine($@"
+Quiz Name: {quizName2}
+Correct Answers: {userQuiz.CorrectAnswerCount}
+Passed Answers: {userQuiz.PassedAnswerCount}
+Wrong Answers: {userQuiz.WrongAnswerCount}
+
+Success Rate: {userQuiz.SuccessRate}%
+Rank: ");
+
+			Console.ReadKey();
+
+			UserMenu(user);
+			break;
 
 		case 2:
 
+			var quizResults = userQuizService.GetAll().Where(uq => uq.UserId == user.Id).ToList();
+			int order = 1;
 
+			foreach (var quizResult in quizResults)
+			{
+				var quizName = dbContext.Quizzes.Find(quizResult.QuizId).QuizName;
+
+				Console.WriteLine($@"[Result No{order}]---------------------------------
+Quiz Name: {quizName}
+Correct Answers: {quizResult.CorrectAnswerCount}
+Passed Answers: {quizResult.PassedAnswerCount}
+Wrong Answers: {quizResult.WrongAnswerCount}
+
+Success Rate: {quizResult.SuccessRate}%
+
+");
+
+				order++;
+			}
+
+			Console.ReadKey();
+
+			UserMenu(user);
+			break;
 
 		case 3:
 
@@ -1202,7 +1646,8 @@ Your Choice: ");
 
 		case 5:
 
-
+			Menu();
+			break;
 
 		default:
 

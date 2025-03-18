@@ -15,6 +15,6 @@ public class User
     public string Password { get; set; }
     public DateTime? BirthDate { get; set; }
     public UserRole? UserRole { get; set; }
-    public List<UserQuiz> UserQuizzes { get; set; } = [];
+    public List<UserQuiz>? UserQuizzes { get; set; } = [];
 
 }

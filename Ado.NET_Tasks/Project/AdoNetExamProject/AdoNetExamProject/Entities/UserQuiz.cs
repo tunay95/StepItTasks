@@ -13,10 +13,10 @@ namespace AdoNetExamProject.Entities
         public int QuizId { get; set; }
         public Quiz Quiz { get; set; }
         public User User { get; set; }
-        public int Rank { get; set; }
-        public double SuccessRate { get; set; }
-        public int CorrectAnswerCount { get; set; }
-        public int PassedAnswerCount { get; set; }
-        public int WrongAnswerCount { get; set; }
+        public int? Rank { get; set; }
+        public double? SuccessRate { get; set; }
+        public int? CorrectAnswerCount { get; set; }
+        public int? PassedAnswerCount { get; set; }
+        public int? WrongAnswerCount { get; set; }
     }
 }

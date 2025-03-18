@@ -32,7 +32,6 @@ namespace AdoNetExamProject.Services.Implements
 			Category category = new()
 			{
 				Name = parameters[0] as string,
-				Quizzes = parameters[2] as List<Quiz>,
 			};
 
 			_repository.Add(category);

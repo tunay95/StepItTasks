@@ -11,6 +11,7 @@ namespace AdoNetExamProject.Services.Implements
 {
 	public class UserQuizService : Service<UserQuiz>
 	{
+		private readonly AppDbContext _dbContextResult;
 		public UserQuizService(Repository<UserQuiz> repository) : base(repository)
 		{
 		}
@@ -41,11 +42,11 @@ namespace AdoNetExamProject.Services.Implements
 			{
 				UserId = (int)parameters[0],
 				QuizId = (int)parameters[1],
-				Rank = (int)parameters[2],
-				SuccessRate = (double)parameters[3],
-				CorrectAnswerCount = (int)parameters[4],
-				PassedAnswerCount = (int)parameters[5],
-				WrongAnswerCount = (int)parameters[6]
+				Rank = (int?)parameters[2],
+				SuccessRate = (double?)parameters[3],
+				CorrectAnswerCount = (int?)parameters[4],
+				PassedAnswerCount = (int?)parameters[5],
+				WrongAnswerCount = (int?)parameters[6]
 			};
 
 			_repository.Add(userQuiz);
@@ -82,5 +83,32 @@ namespace AdoNetExamProject.Services.Implements
 
 		public override void DeleteAll() => _repository.DeleteAll();
 
+
+		public UserQuiz StartQuiz(Quiz quiz, int userId)
+		{
+			int correctAnswer = 0;
+			int passedAnswer = 0;
+			int wrongAnswer = 0;
+			int questionNum = 1;
+
+			foreach (var question in quiz.Questions)
+			{
+                Console.Write($"\n[{questionNum}] | ");
+				question.DisplayQuestion();
+				string userAnswer = Console.ReadLine();
+
+				if (userAnswer.ToUpper() == "P") passedAnswer++;
+				else if (question.CheckAnswer(userAnswer)) correctAnswer++;
+				else wrongAnswer++;
+
+				questionNum++;
+			}
+
+			double successRate = correctAnswer *100 / quiz.Questions.Count;
+
+			UserQuiz userQuiz = Create(userId, quiz.Id, null, successRate, correctAnswer, passedAnswer, wrongAnswer);
+
+			return userQuiz;
+		}
 	}
 }

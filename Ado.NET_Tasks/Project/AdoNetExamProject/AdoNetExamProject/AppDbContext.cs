@@ -149,11 +149,19 @@ namespace AdoNetExamProject
 				.HasConstraintName("FK_Quizzes_UserQuizzes");
 
 			modelBuilder.Entity<UserQuiz>()
-				.Property(q => q.Rank)
-				.IsRequired();
+				.Property(uq => uq.Rank)
+				.HasDefaultValue(0);
 
 			modelBuilder.Entity<UserQuiz>()
-				.Property(uq => uq.Rank)
+				.Property(uq => uq.CorrectAnswerCount)
+				.HasDefaultValue(0);
+
+			modelBuilder.Entity<UserQuiz>()
+				.Property(uq => uq.WrongAnswerCount)
+				.HasDefaultValue(0);
+
+			modelBuilder.Entity<UserQuiz>()
+				.Property(uq => uq.PassedAnswerCount)
 				.HasDefaultValue(0);
 
 			modelBuilder.Entity<UserQuiz>()

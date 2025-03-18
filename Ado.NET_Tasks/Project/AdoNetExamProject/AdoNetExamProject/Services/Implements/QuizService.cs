@@ -33,7 +33,6 @@ namespace AdoNetExamProject.Services.Implements
 			Quiz quiz = new()
 			{
 				QuizName = parameters[0] as string,
-				Questions = parameters[1] as List<Question>,
 				CategoryId = parameters[2] as int?
 			};
 

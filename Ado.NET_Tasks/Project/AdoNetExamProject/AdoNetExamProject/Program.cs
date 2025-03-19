@@ -1584,14 +1584,39 @@ Your Choice: ");
 			Thread.Sleep(2000);
 			Console.Clear();
 
-			//var rankedUserQuiz = dbContext.UserQuizzes
-			//	.FromSqlRaw(@"
-   //     SELECT *, 
-   //     RANK() OVER(PARTITION BY QuizId ORDER BY CorrectAnswerCount ASC) AS Rank 
-   //     FROM UserQuizzes")
-			//	.ToList();
+			//		var rankedResults = dbContext.UserQuizzes
+			//.GroupBy(uq => uq.QuizId)
+			//.SelectMany(group => group
+			//	.OrderByDescending(uq => uq.CorrectAnswerCount)
+			//	.Select((uq, index) => new
+			//	{
+			//		uq.Id,
+			//		uq.QuizId,
+			//		uq.UserId,
+			//		uq.CorrectAnswerCount,
+			//		Rank = index + 1
+			//	})
+			//)
+			//.OrderBy(r => r.QuizId)
+			//.ThenBy(r => r.Rank)
+			//.ToList();
 
-			//var userRank = rankedUserQuiz.Where(uq => uq.Id == userQuiz.Id).FirstOrDefault().Rank;
+			var rankedResults = dbContext.UserQuizzes
+	.FromSqlRaw(@"
+        SELECT 
+			Id,
+            QuizId,
+            UserId,
+			SuccessRate,
+            CorrectAnswerCount,
+			PassedAnswerCount,
+			WrongAnswerCount,
+            DENSE_RANK() OVER (PARTITION BY QuizId ORDER BY CorrectAnswerCount DESC) AS Rank
+        FROM dbo.UserQuizzes
+    ")
+	.ToList();
+
+			var userRank = rankedResults.Where(uq => uq.Id == userQuiz.Id).FirstOrDefault().Rank;
 
 			var quizName2 = dbContext.Quizzes.Find(userQuiz.QuizId).QuizName;
 
@@ -1602,7 +1627,7 @@ Passed Answers: {userQuiz.PassedAnswerCount}
 Wrong Answers: {userQuiz.WrongAnswerCount}
 
 Success Rate: {userQuiz.SuccessRate}%
-Rank: ");
+Rank: {userRank}");
 
 			Console.ReadKey();
 

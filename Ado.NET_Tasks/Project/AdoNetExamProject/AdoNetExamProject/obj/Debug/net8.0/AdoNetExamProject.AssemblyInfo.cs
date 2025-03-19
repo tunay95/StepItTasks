@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AdoNetExamProject")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+be57536e1dcbbebcc666f488138d51ece992a799")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f0121594242f098e2545c1dc231dd3aa9131554b")]
 [assembly: System.Reflection.AssemblyProductAttribute("AdoNetExamProject")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AdoNetExamProject")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
